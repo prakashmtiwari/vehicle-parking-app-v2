@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+User Parking history
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">User Parking History</h2>
+    {% if user.reservation|length == 0 %}   
+    <div class="alert alert-info" role="alert">
+        No parking history available.
+    </div>
+    {% else %}
+    <table class="table table-striped table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>#</th>
+                <th>Lot ID</th>
+                <th>Spot ID</th>
+                <th>Vehicle Number</th>
+                <th>Parking Timestamp</th>
+                <th>Leaving Timestamp</th>
+                <th>Amount Collected</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in user.reservation %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ reservation.spot.lot.id }}</td>
+                <td>{{ reservation.spot_id }}</td>
+                <td>{{ reservation.vehicle_number }}</td>
+                <td>{{ reservation.parking_timestamp.strftime("%Y-%m-%d %H:%M:%S") or '—' }}</td>
+                <td>{% if reservation.leaving_timestamp %}{{ reservation.leaving_timestamp.strftime("%Y-%m-%d %H:%M:%S") }}{% else %}—{% endif %}</td>
+                <td>{{ reservation.amount_paid }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No Reservations Yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% endif %}
+</div>
+
+{% endblock %}

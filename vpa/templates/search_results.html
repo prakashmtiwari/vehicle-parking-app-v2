@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Parking Lot Search Results
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div class="container mt-4">
+    <h3 class="mb-4">Search Results for "{{ query }}"</h3>
+
+    {% if results %}
+        <div class="container mt-5">
+            <h3>Available Parking Lots <i class="fa fa-car"></i></h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-info">
+                    <tr>
+                        <th>Prime Location Name</th>
+                        <th>Address</th>
+                        <th>Pin Code</th>
+                        <th>Price</th>
+                        <th>Max Spots</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                        {% if item.__class__.__name__ == 'Parking_Lot' %}
+                        <tr>
+                            <td>{{ item.prime_location_name }}</td>
+                            <td>{{ item.address }}</td>
+                            <td>{{ item.pin_code }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.maximum_number_of_spots }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#confirmBookingModal{{ item.id }}">
+                                    Book
+                                </button>
+                            </td>
+ 
+                            <!-- Confirm Booking Modal -->
+                            <div class="modal fade" id="confirmBookingModal{{ item.id }}" tabindex="-1" aria-labelledby="confirmBookingLabel{{ item.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form method="POST" action="{{ url_for('book_spot', lot_id=item.id) }}">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmBookingLabel{{ item.id }}">Confirm Booking</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <div class="modal-body">
+                                    <p>Are you sure you want to book a reservation at <strong>{{ item.prime_location_name }}</strong>?</p>
+
+                                    <div class="mb-3">
+                                        <label for="vehicleNumber{{ item.id }}" class="form-label">Vehicle Number</label>
+                                        <input type="text" class="form-control" id="vehicleNumber{{ item.id }}" name="vehicle_number" placeholder="Enter your vehicle number" required>
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            </div>
+
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No results found for "{{ query }}".
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Search Results
+{% endblock %}
+
+{% block style%}
+
+<style>
+        .lot-box {
+            border: 2px solid #333;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+        }
+
+        .spots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 30px);
+            gap: 5px;
+            margin-top: 1rem;
+        }
+
+        .spot {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .spot.available {
+            background-color: green;
+        }
+
+        .spot.occupied {
+            background-color: red;
+        }
+    </style>
+
+
+{% endblock %}  
+
+
+{% block content %}
+
+
+<div class="container mt-4">
+    <h3 class="mb-4">Search Results for "{{ query }}"</h3>
+
+    {% if results %}
+
+        {% if filter == 'user' %}
+        <div class="container mt-5">
+            <h3>User<i class="fa fa-user"></i></h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-info">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results %}
+                        {% if item.__class__.__name__ == 'User' %}
+                        <tr>
+                            <td>{{ item.username }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>{{ item.fullname }}</td>                                         
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% elif filter == 'lot' %}
+        
+         {% for item in results %}
+            {% if item.__class__.__name__ == 'Parking_Lot' %}
+                <div class="container mt-5">
+                  <h3>Parking Lot<i class="fa fa-car"></i></h3>
+                  <div class="lot-box">
+                    <h3>{{ item.prime_location_name }}</h3>
+                    <p>Address: {{ item.address }} | Pin Code: {{ item.pin_code }}</p>
+                    <div class="spots-grid">
+                    {% for spot in item.spots %}
+                        <div class="spot {{ 'available' if spot.status == 'A' else 'occupied' }}">
+                            {{ 'A' if spot.status == 'A' else 'O' }}
+                        </div>
+                    {% endfor %}
+                   </div>
+             </div>
+        </div>      
+            {% endif %}
+        {% endfor %}
+
+  
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No results found for "{{ query }}".
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

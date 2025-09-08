@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Summary
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Parking History</h2>
+    <p class="text-muted">Duration (in minutes) per reservation</p>
+    <img src="{{ chart }}" alt="Parking Duration Chart" class="img-fluid">
+</div>
+
+<!-- Show the table of parking history of all reservations -->
+
+<div class="container mt-4">
+    <h3>Parking History Table</h3>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th class="w-10">ID</th>
+                <th class="w-20">User</th>  
+                <th class="w-20">Vehicle Number</th>
+                <th class="w-20">Start Time</th>
+                <th class="w-20">End Time</th>
+                <th class="w-20">Duration (minutes)</th>
+                <th class="w-20">Amount Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.id }}</td>
+                <td>{{ reservation.user.username }}</td>
+                <td>{{ reservation.vehicle_number }}</td>
+                <td>{{ reservation.parking_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ reservation.leaving_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>
+                    {{
+                        ((reservation.leaving_timestamp - reservation.parking_timestamp).total_seconds() / 60) | round(0, 'floor')
+                    }} minutes
+                </td>
+                <td> ₹ {{ reservation.amount_paid }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+    </table>
+</div>
+{% if reservations|length == 0 %}
+
+<div class="container mt-4">
+    <div class="alert alert-info" role="alert">
+        No parking history available.
+    </div>
+</div>
+{% endif %}
+</div>
+
+{% endblock %}

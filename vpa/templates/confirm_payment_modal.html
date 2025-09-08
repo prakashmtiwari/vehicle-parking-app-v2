@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+Confirm Payment Modal
+{% endblock %}
+
+{% block content %}
+
+<!-- Automatically show modal -->
+<script>
+  window.onload = () => new bootstrap.Modal(document.getElementById('paymentModal')).show();
+</script>
+
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Make Payment</h5>
+      </div>
+
+      <div class="modal-body">
+        <p><strong>Spot ID:</strong> {{ reservation.spot_id }}</p>
+        <p><strong>Parking Time:</strong> {{ reservation.parking_timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+        <p><strong>Leaving Time:</strong> {{ leaving_timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+        <p><strong>Amount Due:</strong> ₹{{ amount_due }}</p>
+      </div>
+
+      <div class="modal-footer">
+        <form method="POST" action="{{ url_for('release_spot', reservation_id=reservation.id) }}">
+          <input type="hidden" name="leaving_timestamp" value="{{ leaving_timestamp }}">
+          <input type="hidden" name="amount_paid" value="{{ amount_due }}">
+          <button type="submit" class="btn btn-success">Pay & Release</button>
+        </form>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url_for('user_dash', id=current_user.id) }}'">
+           Cancel
+        </button>
+      </div>
+
+    </div>    
+  </div>
+</div>
+
+
+{% endblock %}

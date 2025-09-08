@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Users
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Registered Users</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+             <tr>
+                <th class="w-10">ID</th>
+                <th class="w-20">Username</th>
+                <th class="w-25">Email</th>
+                <th class="w-25">Full Name</th>
+                <th class="w-20">Action</th> 
+             </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            {% if user.username != 'admin' %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email or '—' }}</td>
+                <td>{{ user.fullname or '—' }}</td>
+                <td>
+                    <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ user.id }}">
+                        Delete
+                    </button> <br>
+
+                    <!-- Delete User Modal -->
+
+                    <div class="modal fade" id="deleteUserModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteUserModalLabel{{ user.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModalLabel{{ user.id }}">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            Are you sure you want to delete user <strong>{{ user.username }}</strong>? This action cannot be undone.
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}">
+                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                            </form>
+                        </div>
+
+                        </div>
+                    </div>
+                    </div> 
+
+                    <button 
+                        class="btn btn-primary btn-sm" 
+                        onclick="window.location.href='{{ url_for('see_user_history', user_id=user.id) }}'">
+                        See History
+                    </button>
+                    </div>
+                </td>
+            </tr>
+            {% endif %} 
+            {% else %}parking_history
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

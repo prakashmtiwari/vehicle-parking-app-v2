@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Parking lot
+{% endblock %}
+
+
+
+{% block content %}
+    <form method="POST" action="{{ url_for('edit_lot', id=lot.id) }}">
+        <div class="mb-3">
+            <label for="prime_location_name" class="form-label">Prime Location Name</label>
+            <input type="text" class="form-control" id="prime_location_name" name="prime_location_name" placeholder="{{ lot.prime_location_name }}">
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" class="form-control" id="price" name="price" placeholder="{{ lot.price }}">
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="{{ lot.address }}">
+        </div>
+        <div class="mb-3">
+            <label for="pin_code" class="form-label">Pin Code</label>
+            <input type="number" class="form-control" id="pin_code" name="pin_code" placeholder="{{ lot.pin_code }}">
+        </div>
+        <div class="mb-3">
+            <label for="maximum_number_of_spots" class="form-label">Maximum Number of Spots</label>
+            <input type="number" class="form-control" id="maximum_number_of_spots" name="maximum_number_of_spots" placeholder="{{ lot.maximum_number_of_spots }}">    
+        </div>  
+        
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-danger me-2" onclick="window.location.href='{{ url_for('admin_dash') }}'">Cancel</button>
+    </form>
+{% endblock %}
