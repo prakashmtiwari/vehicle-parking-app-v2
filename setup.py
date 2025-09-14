@@ -16,10 +16,10 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
-        "Intended Audience :: Developers",
+        "Intended Audience :: Users",
         "License :: OSI Approved :: MIT License"
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=[
         "flask",
         "celery",

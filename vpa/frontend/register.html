@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+</head>
+<body>
+  <div id="app">
+    <h2>Register</h2>
+    <input v-model="form.email" placeholder="Email"><br>
+    <input v-model="form.password" type="password" placeholder="Password"><br>
+    <input v-model="form.username" placeholder="Username"><br>
+    <input v-model="form.first_name" placeholder="First Name"><br>
+    <input v-model="form.last_name" placeholder="Last Name"><br>
+    <input v-model="form.fs_uniquifier" placeholder="FS Uniquerifier"><br>  
+    <button @click="registerUser">Register</button>
+    <p>{{ message }}</p>
+    <a href="login.html">Already have an account? Login</a>
+  </div>
+
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          form: { email: "", password: "" },
+          message: ""
+        };
+      },
+      methods: {
+        async registerUser() {
+          try {
+            const res = await axios.post("http://127.0.0.1:5000/auth/register", this.form);
+            this.message = res.data.message;
+            console.log("Registration successful:", res.data);
+          } catch (err) {
+            this.message = err.response?.data?.error || "Registration failed";
+          }
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>

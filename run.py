@@ -1,6 +1,8 @@
-from vpa import app
+from vpa import create_app
+
+app = create_app()
 
 
-# Checks if the run.py file has executed directly and not imported
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
+

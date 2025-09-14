@@ -1,0 +1,33 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+
+# --- Virtual envs ---
+.venv/
+venv/
+env/
+
+# --- IDE files ---
+.vscode/
+.idea/
+
+# --- Databases ---
+*.sqlite
+*.sqlite3
+dev.sqlite
+
+# --- Environment files ---
+.env
+.env.local
+
+# --- Logs ---
+*.log
+
+# --- Migrations cache ---
+migrations/versions/__pycache__/

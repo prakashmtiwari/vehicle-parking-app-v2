@@ -1,24 +1,44 @@
 from sqlalchemy import null
-from vpa import app, db
+from vpa.backend.extensions import db
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 from datetime import datetime
-from flask_login import UserMixin
+from flask_security import UserMixin, RoleMixin
 
+   # Association table for many-to-many user roles
+roles_users = db.Table(
+         "roles_users",
+         db.Column("user_id", db.Integer(), db.ForeignKey("user.id")),
+         db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
+     )
 
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), unique=True)
-    passhash = db.Column(db.String(256), nullable=False)
-    email = db.Column(db.String(256), nullable=True)
-    fullname = db.Column(db.String(64), nullable=True)
-    is_admin = db.Column(db.Boolean, nullable=False, default=False)
-
+    username = db.Column(db.String(32), unique=True, nullable=False)
+    password = db.Column(db.String(256), nullable=False)
+    email = db.Column(db.String(256), unique=True, nullable=True)
+    active = db.Column(db.Boolean(), default=True)
+    first_name = db.Column(db.String(64), nullable=True)
+    last_name = db.Column(db.String(64), nullable=True)
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)  # Flask-Security requirement
+    
     reservation = db.relationship('Reservation', backref='user', lazy=True)
 
+    roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic"))
+
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"<Role {self.name}>"
 
 
 
@@ -60,15 +80,15 @@ class Reservation(db.Model, UserMixin):
 
 
 
-with app.app_context():
-    db.create_all()
-    # if admin exists, else create admin
-    admin = User.query.filter_by(is_admin=True).first()
-    if not admin:
-        password_hash = generate_password_hash('admin')
-        admin = User(username='admin', passhash=password_hash, fullname='Admin', is_admin=True)
-        db.session.add(admin)
-        db.session.commit()
+#with app.app_context():
+#    db.create_all()
+#    # if admin exists, else create admin
+#    admin = User.query.filter_by(is_admin=True).first()
+#    if not admin:
+#        password_hash = generate_password_hash('admin')
+#        admin = User(username='admin', passhash=password_hash, fullname='Admin', is_admin=True)
+#        db.session.add(admin)
+#        db.session.commit()
 
     
 
