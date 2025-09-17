@@ -16,6 +16,7 @@ env/
 # --- IDE files ---
 .vscode/
 .idea/
+.editorconfig
 
 # --- Databases ---
 *.sqlite
@@ -31,3 +32,5 @@ dev.sqlite
 
 # --- Migrations cache ---
 migrations/versions/__pycache__/
+migrations/
+

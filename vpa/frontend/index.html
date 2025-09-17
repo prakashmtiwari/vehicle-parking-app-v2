@@ -1,40 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Vehicle Parking App</title>
+  <link rel="stylesheet" href="/static/css/Landing.css">
 </head>
-
 <body>
-  <div id="app">
-    <h1>Vehicle Parking App</h1>
-    <div v-if="!isLoggedIn">
-      <p>Welcome! Please choose an option:</p>
-      <a href="login.html">Login</a> | 
-      <a href="register.html">Register</a>
-    </div>
-  </div>
+  <!-- Vue mounts here -->
+  <div id="app"></div>
 
+  <!-- Vue + Router -->
   <script src="https://unpkg.com/vue@3"></script>
-  <script>
-    const { createApp } = Vue;
-
-    createApp({
-      data() {
-        return {
-          isLoggedIn: false
-        };
-      },
-      mounted() {
-        const token = localStorage.getItem("token");
-        if (token) {
-          // ✅ If token exists, go to dashboard
-          window.location.href = "dashboard.html";
-        } else {
-          // ❌ No token → stay on index page
-          this.isLoggedIn = false;
-        }
-      }
-    }).mount("#app");
-  </script>
+  <script src="https://unpkg.com/vue-router@4"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

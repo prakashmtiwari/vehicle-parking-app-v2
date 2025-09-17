@@ -4,10 +4,11 @@ from flask_restful import Api
 from vpa.backend.config import DevelopmentConfig
 from dotenv import load_dotenv
 import os
-from vpa.backend.extensions import db, migrate, security, login_manager, jwt
+from vpa.backend.extensions import db, migrate,jwt
 from vpa.backend.models import User, Role
-from vpa.backend.auth import auth_bp
+from vpa.backend.routes.auth import auth_bp
 import click
+from werkzeug.security import generate_password_hash
 
 #from .commands import create_admin
 
@@ -20,19 +21,13 @@ def create_app(config_class=DevelopmentConfig):
     # init extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    login_manager.init_app(app)
     jwt.init_app(app)
     api = Api(app)
     CORS(app)
 
-    # Security requires a datastore; supply SQLAlchemyUserDatastore
-    from flask_security import SQLAlchemyUserDatastore
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security.init_app(app, user_datastore)
 
     # Register blueprints
     app.register_blueprint(auth_bp)
-#    app.register_blueprint(api_bp)
 
 
     # with app.app_context():
@@ -66,12 +61,11 @@ def create_app(config_class=DevelopmentConfig):
 
         if not admin_user:
             try:
-                from flask_security import hash_password
-                password_hash = hash_password("admin")
+                password_hash = generate_password_hash("admin")
                 admin_user = User(
                     username="admin",
                     password=password_hash,
-                    fs_uniquifier="admin-001")
+                    )
                 db.session.add(admin_user)
                 db.session.commit()
                 click.echo("Added admin user")
@@ -94,13 +88,6 @@ def create_app(config_class=DevelopmentConfig):
         else:
             click.echo("Admin user already has admin role.")   
 
-        
-
-
-    # flask-login explicit loader (Flask-Security registers its own but it's fine to have explicit)
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
 
 
     return app

@@ -19,6 +19,7 @@ class BaseConfig:
     SECURITY_CONFIRMABLE = False  # set True if you want confirm flow with emails
     SECURITY_POST_LOGIN_VIEW = None
     SECURITY_POST_REGISTER_VIEW = None
+    SECURITY_POST_LOGIN_VIEW = "/post-login"
 
     # JWT for API tokens
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "jwt-secret-change-me")

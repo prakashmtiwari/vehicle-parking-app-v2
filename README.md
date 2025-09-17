@@ -1,9 +1,9 @@
 Project Setup
 
+Backend
+##Commands to set up database migrate it.
 
-##Commands to migrate app
-
-#Initialize migrations (first time only)
+#Initialize migrations (first time only). Go to the folder ./vpa/backend and runs
 flask db init
 
 #Generate migrations when models change
@@ -14,3 +14,32 @@ flask db upgrade
 
 #Seed the database with admin role and admin user with superuser priviledges
 flask seed
+
+# default username and password for admin is "admin"
+ 
+
+#Run the backend server
+# Create virtual environment with python 3.11.11
+python3.11 -m venv venv
+
+# Activate the venv
+source venv/bin/activate
+
+python setup.py develop
+
+# Go to vpa/backend
+flask run      ||    python app.py
+
+
+#Frontend 
+
+#install vue js
+npm create vue@latest
+
+cd vpa/feserver
+npm install
+npm run dev
+
+
+# For production
+npm run build
