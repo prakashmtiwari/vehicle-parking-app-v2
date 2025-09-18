@@ -7,6 +7,8 @@ import os
 from vpa.backend.extensions import db, migrate,jwt
 from vpa.backend.models import User, Role
 from vpa.backend.routes.auth import auth_bp
+from vpa.backend.api_routes import register_resources
+
 import click
 from werkzeug.security import generate_password_hash
 
@@ -29,7 +31,9 @@ def create_app(config_class=DevelopmentConfig):
     # Register blueprints
     app.register_blueprint(auth_bp)
 
-
+    # Register RESTful resources
+    register_resources(api)
+ 
     # with app.app_context():
     #     db.create_all()
 
@@ -37,9 +41,11 @@ def create_app(config_class=DevelopmentConfig):
     @app.cli.command("seed")
     def seed():
         click.echo("Starting seed...")
-       # create the admin role
+       # create the admin and user roles
         admin_role = Role.query.filter_by(name='admin').first()
         click.echo(f"Admin role query result: {admin_role}")
+        user_role = Role.query.filter_by(name='user').first()
+        click.echo(f"User role query result: {user_role}")
 
 
         if not admin_role:
@@ -53,6 +59,18 @@ def create_app(config_class=DevelopmentConfig):
                 click.echo(f"Error creating admin role: {e}")
         else:
             click.echo("Admin role already exists.")
+
+        if not user_role:
+            try:
+                user_role = Role(name='user', description='Default role for regular users')
+                db.session.add(user_role)
+                db.session.commit()
+                click.echo("Added user role")
+            except Exception as e:
+                db.session.rollback()
+                click.echo(f"Error creating user role: {e}")
+        else:
+            click.echo("User role already exists.")      
 
 
         #Create the admin user

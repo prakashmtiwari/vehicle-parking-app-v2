@@ -1,0 +1,66 @@
+from flask import request
+from flask_restful import Resource
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from vpa.backend.models import Parking_Spot, User
+from vpa.backend.extensions import db
+
+def is_admin(user):
+    return any(role.name == "admin" for role in user.roles)
+
+class SpotListResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_user = User.query.get(get_jwt_identity()["id"])
+        if not current_user or not is_admin(current_user):
+            return {"message": "Forbidden"}, 403
+
+        spots = Parking_Spot.query.all()
+        return [
+            {
+                "id": s.id,
+                "status": s.status,
+                "lot_id": s.lot_id
+            } for s in spots
+        ], 200
+
+    @jwt_required()
+    def post(self):
+        current_user = User.query.get(get_jwt_identity()["id"])
+        if not current_user or not is_admin(current_user):
+            return {"message": "Forbidden"}, 403
+
+        data = request.get_json()
+        spot = Parking_Spot(
+            status=data["status"],
+            lot_id=data.get("lot_id")
+        )
+        db.session.add(spot)
+        db.session.commit()
+        return {"message": "Spot created", "id": spot.id}, 201
+
+
+class SpotResource(Resource):
+    @jwt_required()
+    def put(self, spot_id):
+        current_user = User.query.get(get_jwt_identity()["id"])
+        if not current_user or not is_admin(current_user):
+            return {"message": "Forbidden"}, 403
+
+        spot = Parking_Spot.query.get_or_404(spot_id)
+        data = request.get_json()
+        spot.status = data.get("status", spot.status)
+        spot.lot_id = data.get("lot_id", spot.lot_id)
+
+        db.session.commit()
+        return {"message": "Spot updated"}, 200
+
+    @jwt_required()
+    def delete(self, spot_id):
+        current_user = User.query.get(get_jwt_identity()["id"])
+        if not current_user or not is_admin(current_user):
+            return {"message": "Forbidden"}, 403
+
+        spot = Parking_Spot.query.get_or_404(spot_id)
+        db.session.delete(spot)
+        db.session.commit()
+        return {"message": "Spot deleted"}, 200

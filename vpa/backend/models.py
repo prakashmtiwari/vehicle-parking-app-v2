@@ -32,18 +32,7 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.username}>"
-
-    # optional helper to serialize user info (for JWT payloads or responses)
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "email": self.email,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "roles": [role.name for role in self.roles],
-        }
-
+  
 
 class Role(db.Model):
     __tablename__ = "role"
@@ -67,7 +56,9 @@ class Parking_Lot(db.Model):
     maximum_number_of_spots = db.Column(db.Integer, nullable=False)
 
     spots = db.relationship('Parking_Spot', backref='lot', lazy=True)
-
+ 
+    def __repr__(self):      
+        return f"<Lot {self.id} - {self.prime_location_name} - Price {self.price}>"
 
 
 class Parking_Spot(db.Model):
@@ -78,6 +69,9 @@ class Parking_Spot(db.Model):
     lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable=True)
 
     reservation = db.relationship('Reservation', backref='spot', lazy=True)
+
+    def __repr__(self):
+        return f"<Spot {self.id} - Status {self.status} - Lot {self.lot_id}>"       
 
 
 
@@ -93,16 +87,7 @@ class Reservation(db.Model):
     amount_paid = db.Column(db.Integer, nullable=True)
 
 
-
-#with app.app_context():
-#    db.create_all()
-#    # if admin exists, else create admin
-#    admin = User.query.filter_by(is_admin=True).first()
-#    if not admin:
-#        password_hash = generate_password_hash('admin')
-#        admin = User(username='admin', passhash=password_hash, fullname='Admin', is_admin=True)
-#        db.session.add(admin)
-#        db.session.commit()
-
+    def __repr__(self):
+        return f"<Reservation {self.id} - Spot {self.spot_id} - User {self.user_id}>"
     
 

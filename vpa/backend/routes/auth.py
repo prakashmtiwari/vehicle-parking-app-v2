@@ -57,6 +57,16 @@ def register():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": f"Error creating user: {e}"}), 500
+    
+    # assign default "user" role
+    try:
+        user_role = Role.query.filter_by(name="user").first()
+        if user_role:
+            user.roles.append(user_role)
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": f"Error assigning default role: {e}"}), 500
 
     return jsonify({
         "success": True,
