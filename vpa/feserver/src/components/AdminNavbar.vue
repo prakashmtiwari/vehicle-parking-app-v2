@@ -9,10 +9,11 @@ import LogoutButton from '@/components/LogoutButton.vue'
     </div>
 
     <ul class="navbar-links">
-      <li><router-link to="/admin">Home</router-link></li>
-      <li><router-link to="/users">Users</router-link></li>
-      <li><router-link to="/search">Search</router-link></li>
-      <li><router-link to="/report">Reports</router-link></li>
+      <button class="btn btn-outline-light btn-sm"><li><router-link to="/admin">Home</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm"><li><router-link to="/parking-lots">Parking Lots</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm"><li><router-link to="/users">Users</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm"><li><router-link to="/search">Search</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm"><li><router-link to="/report">Reports</router-link></li></button>
       <LogoutButton />
     </ul>
   </nav>
@@ -42,12 +43,8 @@ import LogoutButton from '@/components/LogoutButton.vue'
 }
 
 .navbar-links a {
-  color: #ecf0f1;
+  color: #051013;
   text-decoration: none;
   font-weight: 500;
-}
-
-.navbar-links a:hover {
-  color: #1abc9c;
 }
 </style>

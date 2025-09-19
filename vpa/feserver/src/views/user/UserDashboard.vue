@@ -1,6 +1,6 @@
 <script setup>
-import UserNavbar from '../components/UserNavbar.vue'
-import UserFooter from '../components/UserFooter.vue'
+import UserNavbar from '@/components/UserNavbar.vue'
+import UserFooter from '@/components/UserFooter.vue'
 </script>
 
 <template>

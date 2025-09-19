@@ -1,6 +1,7 @@
 <script setup>
-import AdminNavbar from '../components/AdminNavbar.vue'
-import AdminFooter from '../components/AdminFooter.vue'
+import AdminNavbar from '@/components/AdminNavbar.vue'
+import AdminFooter from '@/components/AdminFooter.vue'
+import ParkingLotManagement from '@/views/admin/ParkingLotManagement.vue';
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import AdminFooter from '../components/AdminFooter.vue'
       <h1>Welcome, Admin</h1>
       <p>Here you can manage users, view reports, and configure settings.</p>
     </main>
-
+   
     <AdminFooter />
   </div>
 </template>

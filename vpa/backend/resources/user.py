@@ -4,17 +4,15 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash
 from vpa.backend.models import User, Role
 from vpa.backend.extensions import db
+from vpa.backend.utils.decorators import admin_required
 
 def is_admin(user):
     return any(role.name == "admin" for role in user.roles)
 
 class UserListResource(Resource):
     @jwt_required()
+    @admin_required
     def get(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         users = User.query.all()
         return [
             {
@@ -28,11 +26,8 @@ class UserListResource(Resource):
         ], 200
 
     @jwt_required()
+    @admin_required
     def post(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         data = request.get_json()
         if not data.get("username") or not data.get("password"):
             return {"message": "username and password required"}, 400
@@ -64,11 +59,8 @@ class UserListResource(Resource):
 
 class UserResource(Resource):
     @jwt_required()
+    @admin_required
     def put(self, user_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         user = User.query.get_or_404(user_id)
         data = request.get_json()
         user.username = data.get("username", user.username)
@@ -82,11 +74,8 @@ class UserResource(Resource):
         return {"message": "User updated"}, 200
 
     @jwt_required()
+    @admin_required
     def delete(self, user_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()

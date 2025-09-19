@@ -5,8 +5,10 @@ import { useAuthStore } from '@/stores/auth'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import UserDashboard from '@/views/UserDashboard.vue'
-import AdminDashboard from '@/views/AdminDashboard.vue'
+import UserDashboard from '@/views/user/UserDashboard.vue'
+import AdminDashboard from '@/views/admin/AdminDashboard.vue'
+import ParkingLotManagement from '@/views/admin/ParkingLotManagement.vue'
+
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -16,6 +18,7 @@ const routes = [
   // protected routes
   { path: '/user', name: 'UserDashboard', component: UserDashboard, meta: { requiresAuth: true, role: 'user' } },
   { path: '/admin', name: 'AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/parking-lots', name: 'ParkingLotManagement', component: ParkingLotManagement, meta: { requiresAuth: true, role: 'admin' } },
 ]
 
 const router = createRouter({

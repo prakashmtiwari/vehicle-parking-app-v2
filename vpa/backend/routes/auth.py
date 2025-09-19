@@ -95,9 +95,8 @@ def login():
     user_roles = [role.name for role in user.roles]
 
     # create JWT with roles in identity
-    access_token = create_access_token(
-        identity={"id": user.id, "username": user.username, "roles": user_roles}
-    )
+    additional_claims = {"username": user.username, "role": [r.name for r in user.roles]}
+    access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
 
     return jsonify({
         "success": True,

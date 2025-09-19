@@ -4,9 +4,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from vpa.backend.models import Reservation, User
 from vpa.backend.extensions import db
 from datetime import datetime
+from vpa.backend.utils.decorators import user_required
 
 class UserReservationListResource(Resource):
     @jwt_required()
+    @user_required
     def get(self):
         """Get all reservations of the logged-in user"""
         current_user = User.query.get(get_jwt_identity()["id"])
@@ -23,6 +25,7 @@ class UserReservationListResource(Resource):
         ], 200
 
     @jwt_required()
+    @user_required
     def post(self):
         """User books a reservation"""
         current_user = User.query.get(get_jwt_identity()["id"])
@@ -43,6 +46,7 @@ class UserReservationListResource(Resource):
 
 class UserReservationResource(Resource):
     @jwt_required()
+    @user_required
     def delete(self, reservation_id):
         """User can cancel their own reservation"""
         current_user = User.query.get(get_jwt_identity()["id"])

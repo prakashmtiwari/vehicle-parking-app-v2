@@ -3,17 +3,15 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from vpa.backend.models import Parking_Spot, User
 from vpa.backend.extensions import db
+from vpa.backend.utils.decorators import admin_required
 
 def is_admin(user):
     return any(role.name == "admin" for role in user.roles)
 
 class SpotListResource(Resource):
     @jwt_required()
+    @admin_required
     def get(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         spots = Parking_Spot.query.all()
         return [
             {
@@ -41,11 +39,8 @@ class SpotListResource(Resource):
 
 class SpotResource(Resource):
     @jwt_required()
+    @admin_required
     def put(self, spot_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         spot = Parking_Spot.query.get_or_404(spot_id)
         data = request.get_json()
         spot.status = data.get("status", spot.status)
@@ -55,11 +50,8 @@ class SpotResource(Resource):
         return {"message": "Spot updated"}, 200
 
     @jwt_required()
+    @admin_required
     def delete(self, spot_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         spot = Parking_Spot.query.get_or_404(spot_id)
         db.session.delete(spot)
         db.session.commit()

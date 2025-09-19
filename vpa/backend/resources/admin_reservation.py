@@ -4,17 +4,16 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from vpa.backend.models import Reservation, User
 from vpa.backend.extensions import db
 from datetime import datetime
+from vpa.backend.utils.decorators import admin_required
+
 
 def is_admin(user):
     return any(role.name == "admin" for role in user.roles)
 
 class ReservationListResource(Resource):
     @jwt_required()
+    @admin_required
     def get(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         reservations = Reservation.query.all()
         return [
             {
@@ -29,11 +28,8 @@ class ReservationListResource(Resource):
         ], 200
 
     @jwt_required()
+    @admin_required
     def post(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         data = request.get_json()
         reservation = Reservation(
             spot_id=data["spot_id"],
@@ -50,11 +46,8 @@ class ReservationListResource(Resource):
 
 class ReservationResource(Resource):
     @jwt_required()
+    @admin_required
     def put(self, reservation_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         reservation = Reservation.query.get_or_404(reservation_id)
         data = request.get_json()
         reservation.spot_id = data.get("spot_id", reservation.spot_id)
@@ -68,11 +61,8 @@ class ReservationResource(Resource):
         return {"message": "Reservation updated"}, 200
 
     @jwt_required()
+    @admin_required
     def delete(self, reservation_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         reservation = Reservation.query.get_or_404(reservation_id)
         db.session.delete(reservation)
         db.session.commit()

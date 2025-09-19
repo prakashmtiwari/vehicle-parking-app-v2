@@ -3,17 +3,16 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from vpa.backend.models import Parking_Lot, User
 from vpa.backend.extensions import db
+from vpa.backend.utils.decorators import admin_required
+
 
 def is_admin(user):
     return any(role.name == "admin" for role in user.roles)
 
 class ParkingLotListResource(Resource):
     @jwt_required()
+    @admin_required
     def get(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         lots = Parking_Lot.query.all()
         return [
             {
@@ -27,30 +26,36 @@ class ParkingLotListResource(Resource):
         ], 200
 
     @jwt_required()
+    @admin_required
     def post(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         data = request.get_json()
-        lot = Parking_Lot(
-            prime_location_name=data["prime_location_name"],
-            address=data["address"],
-            price=data["price"],
-            maximum_number_of_spots=data["maximum_number_of_spots"],
-        )
-        db.session.add(lot)
-        db.session.commit()
-        return {"message": "Parking lot created", "id": lot.id}, 201
+        try:
+            assert "prime_location_name" in data
+            assert "address" in data
+            assert "price" in data
+            assert "maximum_number_of_spots" in data
+        except AssertionError:
+            return {"message": "Missing required fields"}, 400
+        
+        try: 
+            lot = Parking_Lot(
+                prime_location_name=data["prime_location_name"],
+                address=data["address"],
+                price=data["price"],
+                maximum_number_of_spots=data["maximum_number_of_spots"],
+            )
+            db.session.add(lot)
+            db.session.commit()
+            return {"message": "Parking lot created", "id": lot.id}, 201
+        except Exception as e:
+            db.session.rollback()
+            return {"message": "Error creating parking lot", "error": str(e)}, 500
 
 
 class ParkingLotResource(Resource):
     @jwt_required()
+    @admin_required
     def put(self, lot_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         lot = Parking_Lot.query.get_or_404(lot_id)
         data = request.get_json()
         lot.prime_location_name = data.get("prime_location_name", lot.prime_location_name)
@@ -62,11 +67,8 @@ class ParkingLotResource(Resource):
         return {"message": "Parking lot updated"}, 200
 
     @jwt_required()
+    @admin_required
     def delete(self, lot_id):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
         lot = Parking_Lot.query.get_or_404(lot_id)
         db.session.delete(lot)
         db.session.commit()
