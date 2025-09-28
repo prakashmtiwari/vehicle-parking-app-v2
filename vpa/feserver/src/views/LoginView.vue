@@ -30,6 +30,7 @@ const loginUser = async () => {
     if (res.data.success) {
       auth.login(res.data.access_token, res.data.user)
 
+
       message.value = res.data.message
       messageType.value = 'success'
 
@@ -37,7 +38,7 @@ const loginUser = async () => {
       if (res.data.user.roles.includes('admin')) {
         router.push('/admin')
       } else {
-        router.push('/user')
+        router.push(`/user/${res.data.user.id}`) // redirect to user dashboard
       }
     } else {
       message.value = res.data.message

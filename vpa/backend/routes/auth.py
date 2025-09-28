@@ -81,6 +81,7 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json() or {}
+
     username = data.get("username")
     password = data.get("password")
 
@@ -88,14 +89,21 @@ def login():
         return jsonify({"message": "username and password required"}), 400
 
     user = User.query.filter_by(username=username).first()
+
     if not user or not check_password_hash(user.password, password):
         return jsonify({"message": "Invalid username or password"}), 401
+        
 
     # collect roles
     user_roles = [role.name for role in user.roles]
 
+
+    user_id = data.get("id")
+    if user_id and str(user.id) != str(user_id):
+        return jsonify({"message": "User ID does not match username"}), 401
+
     # create JWT with roles in identity
-    additional_claims = {"username": user.username, "role": [r.name for r in user.roles]}
+    additional_claims = {"username": user.username, "user_id":user_id ,"role": [r.name for r in user.roles]}
     access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
 
     return jsonify({

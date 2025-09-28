@@ -33,7 +33,7 @@
               <td>{{ user.fullname }}</td>
               <td>
                 <button
-                  class="btn btn-sm btn-primary me-2"
+                  class="btn btn-sm btn-warning me-2"
                   @click="goToEditUser(user.id)"
                 >
                   Edit

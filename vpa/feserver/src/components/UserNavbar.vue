@@ -1,5 +1,9 @@
 <script setup>
 import LogoutButton from '@/components/LogoutButton.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const auth = useAuthStore()
+
 </script>
 
 <template>
@@ -9,9 +13,10 @@ import LogoutButton from '@/components/LogoutButton.vue'
     </div>
 
     <ul class="navbar-links">
-      <li><router-link to="/user">Home</router-link></li>
-      <li><router-link to="/summary">Summary</router-link></li>
-      <li><router-link to="/settings">Edit Profile</router-link></li>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="`/user/${auth.user?.id}`" class="text-white">Home</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/parking-lot-list" class="text-white">Parking Lots</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/summary" class="text-white">Summary</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/settings" class="text-white">Edit Profile</router-link></li></button>
       <li><LogoutButton /></li>
     </ul>
   </nav>
@@ -24,7 +29,6 @@ import LogoutButton from '@/components/LogoutButton.vue'
   align-items: center;
   background: #2c3e50;
   padding: 1rem 2rem;
-  color: white;
 }
 
 .navbar-brand h2 {
@@ -40,13 +44,13 @@ import LogoutButton from '@/components/LogoutButton.vue'
   padding: 0;
 }
 
-.navbar-links a {
-  color: #ecf0f1;
+.navbar-links a{
   text-decoration: none;
   font-weight: 500;
 }
 
-.navbar-links a:hover {
-  color: #1abc9c;
-}
+.custom-btn:hover {
+  background-color: #f1a978; /* pick your hover background */
+  color: white;              /* ensure text stays visible */}
+
 </style>

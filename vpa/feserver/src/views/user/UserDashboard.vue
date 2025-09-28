@@ -1,6 +1,7 @@
 <script setup>
 import UserNavbar from '@/components/UserNavbar.vue'
 import UserFooter from '@/components/UserFooter.vue'
+import UserParkingHistory from '@/components/UserParkingHistory.vue';   
 </script>
 
 <template>
@@ -8,9 +9,14 @@ import UserFooter from '@/components/UserFooter.vue'
     <UserNavbar />
 
     <main class="content">
+      <div id="intro">
       <h1>Welcome, User</h1>
-      <p>Here you can your parking reservations and history.</p>
+      <p>Here you can see your parking reservation history.</p>
+      </div>
+      <UserParkingHistory />
     </main>
+
+    
 
     <UserFooter />
   </div>
@@ -19,6 +25,9 @@ import UserFooter from '@/components/UserFooter.vue'
 <style scoped>
 .content {
   padding: 2rem;
-  min-height: calc(100vh - 140px); /* adjust for navbar + footer */
+}
+
+#intro {
+  padding-left: 4rem;
 }
 </style>

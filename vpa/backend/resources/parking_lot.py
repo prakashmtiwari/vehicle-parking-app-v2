@@ -11,7 +11,6 @@ def is_admin(user):
 
 class ParkingLotListResource(Resource):
     @jwt_required()
-    @admin_required
     def get(self):
         lots = Parking_Lot.query.all()
         return [

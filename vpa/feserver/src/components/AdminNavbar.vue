@@ -47,6 +47,6 @@ import LogoutButton from '@/components/LogoutButton.vue'
 }
 
 .custom-btn:hover {
-  background-color: #ff6600; /* pick your hover background */
+  background-color: #f1a978; /* pick your hover background */
   color: white;              /* ensure text stays visible */}
 </style>
