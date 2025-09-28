@@ -6,58 +6,53 @@ from vpa.backend.models import User, Role
 from vpa.backend.extensions import db
 from vpa.backend.utils.decorators import admin_required
 
-def is_admin(user):
-    return any(role.name == "admin" for role in user.roles)
 
 class UserListResource(Resource):
     @jwt_required()
     @admin_required
     def get(self):
         users = User.query.all()
-        return [
-            {
-                "id": u.id,
-                "username": u.username,
-                "email": u.email,
-                "fullname": f"{u.first_name or ''} {u.last_name or ''}".strip(),
-                "roles": [r.name for r in u.roles],
-            }
-            for u in users
-        ], 200
+        admin_role = "admin"
 
-    @jwt_required()
-    @admin_required
-    def post(self):
-        data = request.get_json()
-        if not data.get("username") or not data.get("password"):
-            return {"message": "username and password required"}, 400
-        
-        try:
-            new_user = User(
-                username=data["username"],
-                email=data.get("email"),
-                password=generate_password_hash(data["password"]),
-                first_name=data.get("first_name"),
-                last_name=data.get("last_name"),
-            )
+        # Exclude admin users from the list
+        for user in users:
+            if admin_role in [role.name for role in user.roles]:
+                users.remove(user)
+                break
+
+        try: 
+            return [
+                {
+                    "id": u.id,
+                    "username": u.username,
+                    "email": u.email,
+                    "fullname": f"{u.first_name or ''} {u.last_name or ''}".strip(),
+                    "roles": [r.name for r in u.roles],
+                }
+                for u in users
+            ], 200
         except Exception as e:
-            return {"message": f"Error creating user: {e}"}, 400
+            return {"message": f"Error fetching users: {e}"}, 500
 
-        # Add default "user" role
-        try:
-            user_role = Role.query.filter_by(name="user").first()
-            if user_role:
-                new_user.roles.append(user_role)
-        except Exception as e:
-            return {"message": f"Error assigning default role: {e}"}, 400        
-
-
-        db.session.add(new_user)
-        db.session.commit()
-        return {"message": "User created", "id": new_user.id}, 201
 
 
 class UserResource(Resource):
+    @jwt_required()
+    @admin_required
+    def get(self, user_id):
+        user = User.query.get_or_404(user_id)
+        try:
+            return {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "roles": [r.name for r in user.roles],
+            }, 200  
+        except Exception as e:
+            return {"message": f"Error fetching user: {e}"}, 500
+
     @jwt_required()
     @admin_required
     def put(self, user_id):
@@ -67,11 +62,20 @@ class UserResource(Resource):
         user.email = data.get("email", user.email)
         user.first_name = data.get("first_name", user.first_name)
         user.last_name = data.get("last_name", user.last_name)
-        if data.get("password"):
-            user.password = generate_password_hash(data["password"])
+        
+        password = data.get("password", "")
 
-        db.session.commit()
-        return {"message": "User updated"}, 200
+        try: 
+            if data.get("password"):
+                if len(password) < 8:
+                   raise ValueError("Password must be at least 8 characters")
+                user.password = generate_password_hash(data["password"])
+
+            db.session.commit()
+            return {"message": "User updated"}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"Error updating user: {e}"}, 500    
 
     @jwt_required()
     @admin_required

@@ -18,12 +18,13 @@ def register_resources(api):
     api.add_resource(ParkingLotResource, "/admin/lots/<int:lot_id>")
 
     # Parking Spots CRUD
-    api.add_resource(SpotListResource, "/admin/spots")
+    api.add_resource(SpotListResource, "/admin/lots/<int:lot_id>/spots")
     api.add_resource(SpotResource, "/admin/spots/<int:spot_id>")
 
     # Reservations CRUD
     api.add_resource(ReservationListResource, "/admin/reservations")
     api.add_resource(ReservationResource, "/admin/reservations/<int:reservation_id>")
+
 
 
     # User Endpoints

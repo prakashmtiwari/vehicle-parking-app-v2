@@ -13,6 +13,10 @@ export default {
     return axios.get(API_URL, { headers: authHeader() })
   },
 
+  async getLot(id) {
+    return axios.get(`${API_URL}/${id}`, { headers: authHeader() })
+  },
+
   async createLot(data) {
     return axios.post(API_URL, data, { headers: authHeader() })
   },
@@ -27,5 +31,12 @@ export default {
 
   async getSpots(lotId) {
     return axios.get(`${API_URL}/${lotId}/spots`, { headers: authHeader() })
+  },
+  async releaseSpot(spotId) {
+    return axios.post(
+      `${API_BASE_URL}/spots/${spotId}/release`,
+      {},
+      { headers: authHeader() }
+    )
   }
 }

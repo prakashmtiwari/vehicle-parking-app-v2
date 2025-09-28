@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from vpa.backend.models import Parking_Spot, User
+from vpa.backend.models import Parking_Spot, User, Parking_Lot
 from vpa.backend.extensions import db
 from vpa.backend.utils.decorators import admin_required
 
@@ -11,8 +11,9 @@ def is_admin(user):
 class SpotListResource(Resource):
     @jwt_required()
     @admin_required
-    def get(self):
-        spots = Parking_Spot.query.all()
+    def get(self, lot_id):
+        lot = Parking_Lot.query.get_or_404(lot_id)
+        spots = lot.spots 
         return [
             {
                 "id": s.id,
@@ -22,11 +23,9 @@ class SpotListResource(Resource):
         ], 200
 
     @jwt_required()
+    @admin_required
     def post(self):
-        current_user = User.query.get(get_jwt_identity()["id"])
-        if not current_user or not is_admin(current_user):
-            return {"message": "Forbidden"}, 403
-
+        
         data = request.get_json()
         spot = Parking_Spot(
             status=data["status"],

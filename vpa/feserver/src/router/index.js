@@ -8,9 +8,12 @@ import RegisterView from '@/views/RegisterView.vue'
 import UserDashboard from '@/views/user/UserDashboard.vue'
 import AdminDashboard from '@/views/admin/AdminDashboard.vue'
 import ParkingLotManagement from '@/views/admin/ParkingLotManagement.vue'
+import ParkingLotForm from '@/views/admin/ParkingLotForm.vue'
+import UserManagement from '@/views/admin/UserManagement.vue'
+import updateUser from '@/views/admin/updateUser.vue' 
 
 
-const routes = [
+const routes = [  
   { path: '/', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/register', name: 'Register', component: RegisterView },
@@ -18,7 +21,14 @@ const routes = [
   // protected routes
   { path: '/user', name: 'UserDashboard', component: UserDashboard, meta: { requiresAuth: true, role: 'user' } },
   { path: '/admin', name: 'AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
+  //parking lot management
   { path: '/parking-lots', name: 'ParkingLotManagement', component: ParkingLotManagement, meta: { requiresAuth: true, role: 'admin' } },
+  { path: "/parking-lots/new", name: "ParkingLotAdd", component: ParkingLotForm, meta: { requiresAuth: true, role: 'admin' } },
+  { path: "/parking-lots/:id/edit", name: "ParkingLotEdit", component: ParkingLotForm, meta: { requiresAuth: true, role: 'admin' }, props: true },
+
+  // user management by admin
+  { path: "/users", name: "UserManagement", component: UserManagement, meta: { requiresAuth: true, role: 'admin' } },
+  { path: "/users/:id/edit", name: "UserEdit", component: updateUser, meta: { requiresAuth: true, role: 'admin' }, props: true },
 ]
 
 const router = createRouter({

@@ -9,11 +9,11 @@ import LogoutButton from '@/components/LogoutButton.vue'
     </div>
 
     <ul class="navbar-links">
-      <button class="btn btn-outline-light btn-sm"><li><router-link to="/admin">Home</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm"><li><router-link to="/parking-lots">Parking Lots</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm"><li><router-link to="/users">Users</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm"><li><router-link to="/search">Search</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm"><li><router-link to="/report">Reports</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/admin" class="text-white">Home</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/parking-lots" class="text-white">Parking Lots</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/users" class="text-white">Users</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/search" class="text-white">Search</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/report" class="text-white">Reports</router-link></li></button>
       <LogoutButton />
     </ul>
   </nav>
@@ -26,7 +26,6 @@ import LogoutButton from '@/components/LogoutButton.vue'
   align-items: center;
   background: #2c3e50;
   padding: 1rem 2rem;
-  color: white;
 }
 
 .navbar-brand h2 {
@@ -43,8 +42,11 @@ import LogoutButton from '@/components/LogoutButton.vue'
 }
 
 .navbar-links a {
-  color: #051013;
   text-decoration: none;
   font-weight: 500;
 }
+
+.custom-btn:hover {
+  background-color: #ff6600; /* pick your hover background */
+  color: white;              /* ensure text stays visible */}
 </style>

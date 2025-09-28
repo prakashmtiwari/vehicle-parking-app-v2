@@ -1,7 +1,6 @@
 <script setup>
 import AdminNavbar from '@/components/AdminNavbar.vue'
 import AdminFooter from '@/components/AdminFooter.vue'
-import ParkingLotManagement from '@/views/admin/ParkingLotManagement.vue';
 </script>
 
 <template>
