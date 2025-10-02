@@ -38,16 +38,16 @@ export default {
     })
   },
 
-  // ✅ Cancel / delete a reservation
-  deleteReservation(reservationId) {
-    return axios.delete(`${API_BASE_URL}/${reservationId}`, {
+  // ✅ Cancel a reservation by the user
+  cancelReservation(reservationId) {
+    return axios.delete(`${API_USER_BASE_URL}/${reservationId}`, {
       headers: authHeader(),
     })
   },
 
-  // ✅ Free a parking spot (custom endpoint, if implemented)
-  freeSpot(reservationId) {
-    return axios.post(`${API_BASE_URL}/${reservationId}/free`, {}, {
+  // ✅ Complete a  reservation by paying and freeing the spot
+  completeReservation(reservationId) {
+    return axios.post(`${API_USER_BASE_URL}/${reservationId}`, {}, {
       headers: authHeader(),
     })
   }

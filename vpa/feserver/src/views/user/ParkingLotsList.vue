@@ -125,7 +125,9 @@ function hasAvailableSpot(lot) {
 function openReservationModal(lot) {
   selectedLot.value = lot
   vehicleNumber.value = ""
-  reservationTime.value = new Date().toISOString().slice(0,16) // default to now
+  const now = new Date()
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset()) // adjust to local
+  reservationTime.value = now.toISOString().slice(0,16)
   showReservationModal.value = true
 }
 
@@ -145,7 +147,8 @@ async function confirmReservation() {
       alert("No available spots!")
       return
     }
-
+    
+    console.log("Reserving spot:", availableSpot.id, vehicleNumber.value, reservationTime.value)
     const payload = {
       spot_id: availableSpot.id,
       vehicle_number: vehicleNumber.value,

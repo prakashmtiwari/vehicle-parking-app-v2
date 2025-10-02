@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from vpa.backend.extensions import db
-from vpa.backend.models import User, Role
+from vpa.beserver.extensions import db
+from vpa.beserver.models import User, Role
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,

@@ -1,4 +1,4 @@
-from vpa.backend.extensions import db
+from vpa.beserver.extensions import db
 from datetime import datetime
 
 

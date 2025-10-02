@@ -2,9 +2,9 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash
-from vpa.backend.models import User, Role
-from vpa.backend.extensions import db
-from vpa.backend.utils.decorators import admin_required
+from vpa.beserver.models import User, Role
+from vpa.beserver.extensions import db
+from vpa.beserver.utils.decorators import admin_required
 
 
 class UserListResource(Resource):

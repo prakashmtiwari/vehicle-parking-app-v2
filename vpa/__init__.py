@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from vpa.backend.config import DevelopmentConfig
+from vpa.beserver.config import DevelopmentConfig
 from dotenv import load_dotenv
 import os
-from vpa.backend.extensions import db, migrate,jwt
-from vpa.backend.models import User, Role
-from vpa.backend.routes.auth import auth_bp
-from vpa.backend.api_routes import register_resources
+from vpa.beserver.extensions import db, migrate,jwt
+from vpa.beserver.models import User, Role
+from vpa.beserver.routes.auth import auth_bp
+from vpa.beserver.api_routes import register_resources
 
 import click
 from werkzeug.security import generate_password_hash

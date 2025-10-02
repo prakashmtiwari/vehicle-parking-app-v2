@@ -24,7 +24,31 @@ function formatDateTime(timestamp) {
   })
 }
 
-onMounted(async () => {
+async function cancelReservation(reservationId) {
+  if (confirm("Are you sure you want to cancel this reservation?")) {
+    try {
+      await reservationService.cancelReservation(reservationId)
+      alert("Reservation cancelled successfully.")
+      load_reservations()
+    } catch (err) {
+      alert("Failed to cancel reservation.")
+    }
+  }
+}
+
+async function releaseReservation(reservationId) {
+  if (confirm("Release this spot now?")) {
+    try {
+      await reservationService.completeReservation(reservationId)
+      alert("Spot released successfully.")
+      load_reservations()
+    } catch (err) {
+      alert("Failed to release spot.")
+    }
+  }
+}
+
+async function load_reservations (){
   if (!userId) {
     error.value = "User ID not found"
     return
@@ -40,7 +64,12 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+}
+
+onMounted(() => {
+  load_reservations()
 })
+
 </script>
 
 <template>
@@ -63,13 +92,15 @@ onMounted(async () => {
             <table class="table table-hover align-middle">
               <thead class="table-dark">
                 <tr>
-                  <th scope="col">Reservation ID</th>
+                  <th scope="col">ID</th>
                   <th scope="col">Lot Location</th>
                   <th scope="col">Spot ID</th>
                   <th scope="col">Vehicle</th>
                   <th scope="col">Start Time</th>
                   <th scope="col">End Time</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                  <th col scope="col">Amount Paid</th>
                 </tr>
               </thead>
               <tbody>
@@ -85,6 +116,27 @@ onMounted(async () => {
                         {{ res.spot?.status === 'O' ? 'Active' : 'Inactive' }}
                     </span>
                    </td>
+                  <td>
+                  <!-- Cancel Reservation -->
+                  <button
+                    v-if="new Date(res.parking_timestamp) > new Date()" 
+                    class="btn btn-sm btn-outline-warning me-2"
+                    @click="cancelReservation(res.id)"
+                  >
+                    Cancel Reservation
+                  </button>
+
+                  <!-- Release Spot -->
+                  <button
+                    v-else-if="!res.leaving_timestamp"
+                    class="btn btn-sm btn-outline-danger"
+                    @click="releaseReservation(res.id)"
+                  >
+                    Release Spot
+                  </button>
+                </td>
+                <td>{{ res.amount_paid ? `₹${res.amount_paid}` : '-' }}</td>
+
                 </tr>
                 <tr v-if="reservations.length === 0">
                   <td colspan="7" class="text-center text-muted">

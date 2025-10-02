@@ -1,9 +1,9 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from vpa.backend.models import Parking_Spot, User, Parking_Lot
-from vpa.backend.extensions import db
-from vpa.backend.utils.decorators import admin_required
+from vpa.beserver.models import Parking_Spot, User, Parking_Lot
+from vpa.beserver.extensions import db
+from vpa.beserver.utils.decorators import admin_required
 
 def is_admin(user):
     return any(role.name == "admin" for role in user.roles)

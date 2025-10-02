@@ -1,9 +1,11 @@
 # Import resources
-from vpa.backend.resources.user import UserListResource, UserResource
-from vpa.backend.resources.parking_lot import ParkingLotListResource, ParkingLotResource
-from vpa.backend.resources.spots import SpotListResource, SpotResource
-from vpa.backend.resources.reservation import ReservationListResource, ReservationResource, UserReservationListResource
-from vpa.backend.resources.current_user import CurrentUserResource  
+from vpa.beserver.resources.user import UserListResource, UserResource
+from vpa.beserver.resources.parking_lot import ParkingLotListResource, ParkingLotResource
+from vpa.beserver.resources.spots import SpotListResource, SpotResource
+from vpa.beserver.resources.admin_reservation import ReservationListResource, ReservationResource
+from vpa.beserver.resources.user_reservation import UserReservationListResource, UserReservationResource
+from vpa.beserver.resources.current_user import CurrentUserResource  
+
 
 def register_resources(api):
 
@@ -23,6 +25,8 @@ def register_resources(api):
     # Reservations CRUD
     api.add_resource(ReservationListResource, "/api/reservations")
     api.add_resource(UserReservationListResource, "/api/myreservations")
+    api.add_resource(UserReservationResource, "/api/myreservations/<int:reservation_id>")
+
     api.add_resource(ReservationResource, "/api/reservations/<int:reservation_id>")
 
 
