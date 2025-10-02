@@ -12,7 +12,8 @@ import ParkingLotForm from '@/views/admin/ParkingLotForm.vue'
 import UserManagement from '@/views/admin/UserManagement.vue'
 import updateUser from '@/views/admin/updateUser.vue' 
 import parkingLotList from '@/views/user/ParkingLotsList.vue'
-
+import UserSummary from '@/views/user/UserSummary.vue'
+import ReportView from '@/views/admin/AdminSummary.vue' 
 
 const routes = [  
   { path: '/', name: 'Home', component: HomeView },
@@ -25,6 +26,8 @@ const routes = [
   { path: '/parking-lots', name: 'ParkingLotManagement', component: ParkingLotManagement, meta: { requiresAuth: true, roles: ['admin', 'user']  } },
   { path: "/parking-lots/new", name: "ParkingLotAdd", component: ParkingLotForm, meta: { requiresAuth: true, role: 'admin' } },
   { path: "/parking-lots/:id/edit", name: "ParkingLotEdit", component: ParkingLotForm, meta: { requiresAuth: true, role: 'admin' }, props: true },
+  // reports
+  { path: "/admin-summary", name: "AdminSummary", component: ReportView, meta: { requiresAuth: true, role: 'admin' } },
 
   // user management by admin
   { path: "/users", name: "UserManagement", component: UserManagement, meta: { requiresAuth: true, role: 'admin' } },
@@ -33,7 +36,8 @@ const routes = [
   // user dashboard and other user routes
   { path: '/user/:id', name: 'UserDashboard', component: UserDashboard, meta: { requiresAuth: true, role: 'user' } },
   { path: '/parking-lot-list', name: 'parkingLotList', component: parkingLotList, meta: { requiresAuth: true, role: 'user' } },
-]
+  { path: '/user-summary', name: 'UserSummary', component: UserSummary, meta: { requiresAuth: true, role: 'user' } },
+] 
 
 
 const router = createRouter({

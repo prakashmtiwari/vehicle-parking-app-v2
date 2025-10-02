@@ -1,7 +1,12 @@
 <script setup>
 import UserNavbar from '@/components/UserNavbar.vue'
 import UserFooter from '@/components/UserFooter.vue'
-import UserParkingHistory from '@/components/UserParkingHistory.vue';   
+import { useAuthStore } from '@/stores/auth'
+import { Doughnut } from 'vue-chartjs'
+
+const authStore = useAuthStore()
+const current_user_name = authStore.user?.username
+
 </script>
 
 <template>
@@ -10,10 +15,14 @@ import UserParkingHistory from '@/components/UserParkingHistory.vue';
 
     <main class="content">
       <div id="intro">
-      <h1>Welcome, User</h1>
-      <p>Here you can see your parking reservation history.</p>
+      <h1>Welcome {{ current_user_name }} to the parking app.</h1>
       </div>
-      <UserParkingHistory />
+       
+      <div id="intro">
+        <RouterLink to="/parking-lot-list">
+          <button type="button" class="btn btn-primary btn-lg btn-block">Reserve a Parking Spot?</button>
+        </RouterLink>
+      </div>
     </main>
 
     
