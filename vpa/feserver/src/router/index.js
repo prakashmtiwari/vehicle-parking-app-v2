@@ -35,10 +35,12 @@ const routes = [
   { path: '/parking-lot-list', name: 'parkingLotList', component: parkingLotList, meta: { requiresAuth: true, role: 'user' } },
 ]
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
 
 // Navigation Guard
 router.beforeEach((to, from, next) => {
@@ -48,7 +50,6 @@ router.beforeEach((to, from, next) => {
 
   const userRoles = auth.user?.roles || []
   console.log("User roles from store:", userRoles)
-
 
 
   if (to.meta.requiresAuth) {
@@ -65,8 +66,7 @@ router.beforeEach((to, from, next) => {
       console.log("User roles:", userRoles, "Allowed roles:", to.meta.roles, "Access allowed:", allowed)
       if (!allowed) {
         // Redirect depending on user role
-        if (userRoles.includes('admin')) return next('/login')
-        else return next('/login') // default for normal users
+        return next('/login') 
       }
     }
 

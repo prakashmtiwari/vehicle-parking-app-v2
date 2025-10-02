@@ -5,33 +5,51 @@ from vpa.beserver.models import Reservation, User, Parking_Spot as Spot
 from vpa.beserver.extensions import db
 from datetime import datetime
 from vpa.beserver.utils.decorators import user_required
+from vpa.beserver.utils.parking_cost_calculator import parking_cost
+
 
 
 class UserReservationListResource(Resource):
     @jwt_required()
     @user_required
     def get(self):
-        """Get all reservations of the logged-in user"""
+   # """Get all reservations of the logged-in user"""
         current_user = User.query.get(int(get_jwt_identity()))
         reservations = Reservation.query.filter_by(user_id=current_user.id).all()
-        return [
-            {
+
+        result = []
+        for r in reservations:
+            # calculate duration in hours and minutes
+            if r.parking_timestamp and r.leaving_timestamp:
+                total_seconds = (r.leaving_timestamp - r.parking_timestamp).total_seconds()
+                hours = int(total_seconds // 3600)
+                minutes = int((total_seconds % 3600) // 60)
+                duration_str = f"{hours} hours {minutes} minutes"
+            else:
+                duration_str = "—"
+
+            res_data = {
                 "id": r.id,
                 "spot_id": r.spot_id,
                 "vehicle_number": r.vehicle_number,
                 "parking_timestamp": r.parking_timestamp.isoformat() if r.parking_timestamp else None,
                 "leaving_timestamp": r.leaving_timestamp.isoformat() if r.leaving_timestamp else None,
                 "amount_paid": r.amount_paid,
+                "duration": duration_str,
                 "spot": {
                     "id": r.spot.id,
                     "status": r.spot.status,
                     "lot": {
                         "id": r.spot.lot.id,
-                        "prime_location_name": r.spot.lot.prime_location_name
+                        "prime_location_name": r.spot.lot.prime_location_name,
+                        "price": r.spot.lot.price  # Hourly rate
                     }
-                 } if r.spot else None
-            } for r in reservations
-        ], 200
+                } if r.spot else None
+            }
+            result.append(res_data)
+
+        return result, 200
+
     
     @jwt_required()
     @user_required
@@ -79,12 +97,16 @@ class UserReservationResource(Resource):
 
         if reservation.leaving_timestamp is not None:
             return {"message": "Reservation already completed"}, 400
-
-        # Set leaving timestamp to now and calculate amount paid
+        
         reservation.leaving_timestamp = datetime.now()
-        duration_hours = (reservation.leaving_timestamp - reservation.parking_timestamp).total_seconds() / 3600
-        rate_per_hour = reservation.spot.lot.price  # Example fixed rate, could be dynamic based on lot/spot
-        reservation.amount_paid = round(duration_hours * rate_per_hour, 2)
+
+        # Calculate amount based on duration
+        try:
+            parking_cost = parking_cost(reservation)
+        except Exception as e:
+            return {"message": f"Error calculating parking cost: {e}"}, 500   
+
+     
 
         # Update spot status back to 'A' (Available)
         spot = Spot.query.get(reservation.spot_id)
@@ -100,6 +122,7 @@ class UserReservationResource(Resource):
 
 
 
+# Cancel Reservation by the user
     @jwt_required()
     @user_required
     def delete(self, reservation_id):

@@ -3,6 +3,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
+const current_user_id = auth.user?.id
 
 </script>
 
@@ -13,7 +14,7 @@ const auth = useAuthStore()
     </div>
 
     <ul class="navbar-links">
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="`/user/${auth.user?.id}`" class="text-white">Home</router-link></li></button>
+      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link :to="`/user/${current_user_id}`" class="text-white">Home</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/parking-lot-list" class="text-white">Parking Lots</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/summary" class="text-white">Summary</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/settings" class="text-white">Edit Profile</router-link></li></button>

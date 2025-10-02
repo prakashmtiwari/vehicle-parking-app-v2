@@ -10,6 +10,13 @@ function authHeader() {
 
 
 export default {
+
+  getAllReservations() {
+    return axios.get(`${API_BASE_URL}`, {
+      headers: authHeader(),
+    })
+  },
+
   // ✅ Get reservations for a specific user
   getUserReservations() {
     return axios.get(`${API_USER_BASE_URL}`, {
