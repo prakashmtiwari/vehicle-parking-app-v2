@@ -214,6 +214,35 @@ onMounted(() => {
       </div>
     </div>
 
+    <!-- Payment Confirmation Modal -->
+<div
+  class="modal fade"
+  tabindex="-1"
+  :class="{ show: showPaymentModal }"
+  style="display: block;"
+  v-if="showPaymentModal"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Payment</h5>
+        <button type="button" class="btn-close" @click="showPaymentModal = false"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Are you sure you want to release this spot?<br>
+          Payment Amount: <strong>₹{{ selectedReservation?.amount_paid || 0 }}</strong>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" @click="showPaymentModal = false">Cancel</button>
+        <button class="btn btn-success" @click="confirmPayment">Confirm & Pay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </div>
 </template>
 

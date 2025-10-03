@@ -1,4 +1,4 @@
-import datetime
+
 
 
 def parking_cost(reservation):
@@ -14,9 +14,10 @@ def parking_cost(reservation):
         duration_hours = (reservation.leaving_timestamp - reservation.parking_timestamp).total_seconds() / 3600
         rate_per_hour = reservation.spot.lot.price  
 
-        reservation.amount_paid = round(duration_hours * rate_per_hour, 2)
-        print(f"Calculated parking cost: {reservation.amount_paid} for duration: {duration_hours} hours at rate: {rate_per_hour}/hour")
+        amount_paid = round(duration_hours * rate_per_hour, 2)
+        print(f"Calculated parking cost: {amount_paid} for duration: {duration_hours} hours at rate: {rate_per_hour}/hour")
     except Exception as e:
+        print(e)
         raise ValueError(f"Error in calculating parking cost function: {e}")    
-   
-    return reservation.amount_paid
+
+    return amount_paid

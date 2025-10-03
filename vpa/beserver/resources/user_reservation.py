@@ -89,6 +89,7 @@ class UserReservationResource(Resource):
     @user_required  
     def post(self, reservation_id):
         """User completes their own reservation by paying and freeing the spot"""
+
         current_user = User.query.get(int(get_jwt_identity()))
         reservation = Reservation.query.get_or_404(reservation_id)
 
@@ -100,9 +101,11 @@ class UserReservationResource(Resource):
         
         reservation.leaving_timestamp = datetime.now()
 
+
         # Calculate amount based on duration
         try:
-            parking_cost = parking_cost(reservation)
+            amount_paid = parking_cost(reservation)
+            
         except Exception as e:
             return {"message": f"Error calculating parking cost: {e}"}, 500   
 
@@ -112,8 +115,16 @@ class UserReservationResource(Resource):
         spot = Spot.query.get(reservation.spot_id)
         if spot and spot.status == 'O':  # O for Occupied
             spot.status = 'A'  # A for Available     
+        
+        reservation.amount_paid = amount_paid
 
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"DB commit failed: {e}"}, 500
+        
         return {
             "message": "Reservation completed",
             "amount_paid": reservation.amount_paid,
