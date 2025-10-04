@@ -6,12 +6,14 @@ from vpa.beserver.extensions import db
 from datetime import datetime
 from vpa.beserver.utils.decorators import user_required
 from vpa.beserver.utils.parking_cost_calculator import parking_cost
+from vpa.beserver.utils.cache_manager import cached_response, clear_cache
 
-
+    
 
 class UserReservationListResource(Resource):
     @jwt_required()
     @user_required
+    @cached_response(timeout=240, key_prefix="all_user_reservations")
     def get(self):
    # """Get all reservations of the logged-in user"""
         current_user = User.query.get(int(get_jwt_identity()))
@@ -79,6 +81,9 @@ class UserReservationListResource(Resource):
 
             db.session.add(reservation)
             db.session.commit()
+
+            clear_cache("all_user_reservations")
+
             return {"message": "Reservation created", "id": reservation.id}, 201
         except Exception as e:
             return {"message": f"Error creating reservation: {e}"}, 500
@@ -125,6 +130,8 @@ class UserReservationResource(Resource):
             db.session.rollback()
             return {"message": f"DB commit failed: {e}"}, 500
         
+        clear_cache("all_user_reservations")
+
         return {
             "message": "Reservation completed",
             "amount_paid": reservation.amount_paid,
@@ -144,12 +151,18 @@ class UserReservationResource(Resource):
         if reservation.user_id != current_user.id:
             return {"message": "Unauthorized"}, 403
 
-        #Update spot status back to 'A' (Available) if reservation is active
-        spot = Spot.query.get(reservation.spot_id)
-        if spot and spot.status == 'O':  # O for Occupied
-            spot.status = 'A'  # A for Available     
+        try:
+            #Update spot status back to 'A' (Available) if reservation is active
+            spot = Spot.query.get(reservation.spot_id)
+            if spot and spot.status == 'O':  # O for Occupied
+                spot.status = 'A'  # A for Available     
 
-        db.session.delete(reservation)
-        db.session.commit()
-        return {"message": "Reservation cancelled"}, 200  
-    
+            db.session.delete(reservation)
+            db.session.commit()
+            clear_cache("all_user_reservations")
+
+            return {"message": "Reservation cancelled"}, 200  
+            
+        except Exception as e:
+            db.session.rollback()
+            return {"message": f"Error cancelling reservation: {e}"}, 500

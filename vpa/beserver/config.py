@@ -25,6 +25,15 @@ class BaseConfig:
     JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "jwt-secret-change-me")
     JWT_ACCESS_TOKEN_EXPIRES = int(os.environ.get("JWT_EXPIRES_SECONDS", 3600))
 
+    # Redis Cache
+    CACHE_TYPE = os.environ.get("CACHE_TYPE", "RedisCache")
+    CACHE_REDIS_HOST = os.environ.get("CACHE_REDIS_HOST", "localhost")
+    CACHE_REDIS_PORT = int(os.environ.get("CACHE_REDIS_PORT", 6379))
+    CACHE_REDIS_DB = int(os.environ.get("CACHE_REDIS_DB", 0))
+    CACHE_REDIS_URL = os.environ.get("CACHE_REDIS_URL", "redis://localhost:6379/0")
+    CACHE_REDIS_PASSWORD = os.environ.get("CACHE_REDIS_PASSWORD", None)
+    CACHE_DEFAULT_TIMEOUT = os.environ.get("CACHE_DEFAULT_TIMEOUT", 300)
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
 

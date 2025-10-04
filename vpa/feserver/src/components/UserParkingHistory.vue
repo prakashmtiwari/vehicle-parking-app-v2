@@ -137,7 +137,7 @@ onMounted(() => {
                   <td>{{ formatDateTime(res.leaving_timestamp) || '-' }}</td>
                   <td>
                     <span :class="(!res.leaving_timestamp) ? 'badge bg-success' : 'badge bg-secondary'">
-                        {{ (!res.leaving_timestamp)  ? 'Active' : 'Inactive' }}
+                        {{ (!res.leaving_timestamp)  ? 'Active' : 'Completed' }}
                     </span>
                    </td>
                   <td>

@@ -5,12 +5,13 @@ from vpa.beserver.models import Reservation, User, Parking_Spot as Spot
 from vpa.beserver.extensions import db
 from datetime import datetime
 from vpa.beserver.utils.decorators import admin_required
-from vpa.beserver.utils.parking_cost_calculator import parking_cost
+from vpa.beserver.utils.cache_manager import cached_response, clear_cache
 
 
 class ReservationListResource(Resource):
     @jwt_required()
     @admin_required
+    @cached_response(timeout=180, key_prefix="all_reservations")
     def get(self):
     # Get all reservations by all users (admin only)
         reservations = Reservation.query.all()

@@ -25,7 +25,6 @@
                   <th>Start Time</th>
                   <th>End Time</th>
                   <th>Status</th>
-                  <th>Actions</th>
                   <th>Amount Paid</th>
                 </tr>
               </thead>
@@ -42,22 +41,6 @@
                     <span :class="!res.leaving_timestamp ? 'badge bg-success' : 'badge bg-secondary'">
                       {{ !res.leaving_timestamp ? "Active" : "Inactive" }}
                     </span>
-                  </td>
-                  <td>
-                    <button
-                      v-if="new Date(res.parking_timestamp) > new Date()" 
-                      class="btn btn-sm btn-outline-warning me-2"
-                      @click="cancelReservation(res.id)"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      v-else-if="!res.leaving_timestamp"
-                      class="btn btn-sm btn-outline-danger"
-                      @click="releaseReservation(res.id)"
-                    >
-                      Release
-                    </button>
                   </td>
                   <td>
                     {{ res.amount_paid ? `₹${res.amount_paid}` : "-" }}

@@ -4,7 +4,7 @@ from flask_restful import Api
 from vpa.beserver.config import DevelopmentConfig
 from dotenv import load_dotenv
 import os
-from vpa.beserver.extensions import db, migrate,jwt
+from vpa.beserver.extensions import db, migrate,jwt,cache
 from vpa.beserver.models import User, Role
 from vpa.beserver.routes.auth import auth_bp
 from vpa.beserver.api_routes import register_resources
@@ -26,7 +26,13 @@ def create_app(config_class=DevelopmentConfig):
     jwt.init_app(app)
     api = Api(app)
     CORS(app)
+    cache.init_app(app)
 
+    @app.route("/test-cache")
+    def test_cache():
+        cache.set("test_key", "Hello Redis!")
+        return cache.get("test_key") or "Cache failed"
+    
 
     # Register blueprints
     app.register_blueprint(auth_bp)

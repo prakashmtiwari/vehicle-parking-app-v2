@@ -6,8 +6,6 @@ from vpa.beserver.extensions import db
 from vpa.beserver.utils.decorators import admin_required
 
 
-def is_admin(user):
-    return any(role.name == "admin" for role in user.roles)
 
 class ParkingLotListResource(Resource):
     @jwt_required()
