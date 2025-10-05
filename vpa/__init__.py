@@ -2,19 +2,19 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from vpa.beserver.config import DevelopmentConfig
-from dotenv import load_dotenv
-import os
 from vpa.beserver.extensions import db, migrate,jwt,cache
 from vpa.beserver.models import User, Role
 from vpa.beserver.routes.auth import auth_bp
 from vpa.beserver.api_routes import register_resources
+from vpa.beserver.scheduler.init_celery import init_celery, celery
+
+
 
 import click
 from werkzeug.security import generate_password_hash
 
 #from .commands import create_admin
 
-load_dotenv()
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
@@ -27,12 +27,12 @@ def create_app(config_class=DevelopmentConfig):
     api = Api(app)
     CORS(app)
     cache.init_app(app)
+ 
+    init_celery(app)
+    print(f"Broker URL: {celery.conf.broker_url}")
+    print(f"Result Backend: {celery.conf.result_backend}")
+    print(f"Beat Schedule: {celery.conf.beat_schedule}")
 
-    @app.route("/test-cache")
-    def test_cache():
-        cache.set("test_key", "Hello Redis!")
-        return cache.get("test_key") or "Cache failed"
-    
 
     # Register blueprints
     app.register_blueprint(auth_bp)

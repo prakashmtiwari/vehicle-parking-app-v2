@@ -3,9 +3,13 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from flask_caching import Cache
+from celery import Celery
+
 
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
 api = Api()
 cache = Cache()
+celery = Celery() 
+

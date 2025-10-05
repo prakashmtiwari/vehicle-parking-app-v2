@@ -31,6 +31,15 @@ python setup.py develop
 flask run      ||    python app.py
 
 
+# Start Celery worker 
+celery -A vpa.beserver.scheduler.celery_app.celery worker --loglevel=info
+
+# Start Celery beat (for scheduled tasks)
+celery -A vpa.beserver.scheduler.celery_app.celery beat --loglevel=info
+
+
+
+
 #Frontend 
 
 #install vue js
@@ -43,3 +52,6 @@ npm run dev
 
 # For production
 npm run build
+
+
+

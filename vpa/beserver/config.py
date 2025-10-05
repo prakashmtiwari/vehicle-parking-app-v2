@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# Load .env at the top of config.py
+load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -33,6 +37,16 @@ class BaseConfig:
     CACHE_REDIS_URL = os.environ.get("CACHE_REDIS_URL", "redis://localhost:6379/0")
     CACHE_REDIS_PASSWORD = os.environ.get("CACHE_REDIS_PASSWORD", None)
     CACHE_DEFAULT_TIMEOUT = os.environ.get("CACHE_DEFAULT_TIMEOUT", 300)
+   
+    # Celery backend and broker
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://:123456@localhost:6379/1")
+    CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://:123456@localhost:6379/2")
+
+    REMINDER_CRON = os.environ.get("REMINDER_CRON", "50 14 * * *")
+
+
+    # G-chat webhook url
+    GOOGLE_CHAT_WEBHOOK_URL = os.environ.get("GOOGLE_CHAT_WEBHOOK_URL", None)
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
