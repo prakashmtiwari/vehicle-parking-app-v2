@@ -32,10 +32,10 @@ flask run      ||    python app.py
 
 
 # Start Celery worker 
-celery -A vpa.beserver.scheduler.celery_app.celery worker --loglevel=info
+celery -A vpa.beserver.scheduler.celery_runner worker --loglevel=info
 
 # Start Celery beat (for scheduled tasks)
-celery -A vpa.beserver.scheduler.celery_app.celery beat --loglevel=info
+celery -A vpa.beserver.scheduler.celery_runner beat --loglevel=info
 
 
 

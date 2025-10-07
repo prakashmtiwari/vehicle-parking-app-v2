@@ -6,8 +6,8 @@ from datetime import datetime
 # Association table for many-to-many User <-> Role
 roles_users = db.Table(
     "roles_users",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("role_id", db.Integer, db.ForeignKey("role.id"), primary_key=True),
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id", name="fk_roles_users_user"), primary_key=True),
+    db.Column("role_id", db.Integer, db.ForeignKey("role.id", name="fk_roles_users_role"), primary_key=True),
 )
 
 
@@ -56,6 +56,7 @@ class Parking_Lot(db.Model):
     maximum_number_of_spots = db.Column(db.Integer, nullable=False)
 
     spots = db.relationship('Parking_Spot', backref='lot', lazy=True)
+    reservations = db.relationship('Reservation', backref='parking_lot', lazy=True)
  
     def __repr__(self):      
         return f"<Lot {self.id} - {self.prime_location_name} - Price {self.price}>"
@@ -66,7 +67,7 @@ class Parking_Spot(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(1), nullable=False)
-    lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable=True)
+    lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id', name='fk_parking_spot_parking_lot'), nullable=True)
 
     reservation = db.relationship('Reservation', backref='spot', lazy=True)
 
@@ -74,14 +75,14 @@ class Parking_Spot(db.Model):
         return f"<Spot {self.id} - Status {self.status} - Lot {self.lot_id}>"       
 
 
-
 class Reservation(db.Model):
     __tablename__ = 'reservation'
 
     id = db.Column(db.Integer, primary_key=True)
-    spot_id = db.Column(db.Integer, db.ForeignKey('parking_spot.id'), nullable=True)
+    spot_id = db.Column(db.Integer, db.ForeignKey('parking_spot.id', name='fk_reservation_spot'), nullable=True)
     vehicle_number = db.Column(db.String(16), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_reservation_user'), nullable=True)
+    lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id', name='fk_reservation_parking_lot'), nullable=True)
     parking_timestamp = db.Column(db.DateTime, default=datetime.now, nullable=True)
     leaving_timestamp = db.Column(db.DateTime, default=None, nullable=True)
     amount_paid = db.Column(db.Integer, nullable=True)

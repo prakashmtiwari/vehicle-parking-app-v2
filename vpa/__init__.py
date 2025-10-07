@@ -28,10 +28,6 @@ def create_app(config_class=DevelopmentConfig):
     CORS(app)
     cache.init_app(app)
  
-    init_celery(app)
-    print(f"Broker URL: {celery.conf.broker_url}")
-    print(f"Result Backend: {celery.conf.result_backend}")
-    print(f"Beat Schedule: {celery.conf.beat_schedule}")
 
 
     # Register blueprints
