@@ -36,6 +36,12 @@ function initializeTooltips() {
 }
 
 
+async function triggerExport() {
+  const res = await reservationService.exportUserHistory()
+  if (res.ok) alert("Export started! You’ll get an email when it’s ready.");
+}
+
+
 async function cancelReservation(reservationId) {
   if (confirm("Are you sure you want to cancel this reservation?")) {
     try {
@@ -102,7 +108,14 @@ onMounted(() => {
   <div class="dashboard">
 
     <main class="content container my-5">
+      
       <h2 class="mb-4 text-primary">Your Parking History (User Id {{ userId }})</h2>
+
+      <!-- Export Button aligned to the right -->
+      <div class="mb-3 text-end"> 
+      <button type="button" class="btn btn-outline-info" v-on:click="triggerExport()">Export My Parking History</button>
+      </div>
+
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
 

@@ -2,6 +2,7 @@ import axios from "axios"
 
 const API_BASE_URL = "http://localhost:5000/api/reservations" // Main reservations endpoint
 const API_USER_BASE_URL = "http://localhost:5000/api/myreservations" // 
+const API_EXPORT_URL = "http://localhost:5000/api/export-history" // Export history endpoint
 
 function authHeader() {
   const token = localStorage.getItem("token")
@@ -57,5 +58,11 @@ export default {
     return axios.post(`${API_USER_BASE_URL}/${reservationId}`, {}, {
       headers: authHeader(),
     })
+  },
+  // ✅ Export user parking history 
+  exportUserHistory() {
+    return axios.post(`${API_EXPORT_URL}`, {}, {
+      headers: authHeader(),
+    })
   }
-}
+} 

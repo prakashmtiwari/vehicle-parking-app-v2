@@ -5,6 +5,7 @@ from vpa.beserver.resources.spots import SpotListResource, SpotResource
 from vpa.beserver.resources.admin_reservation import ReservationListResource
 from vpa.beserver.resources.user_reservation import UserReservationListResource, UserReservationResource
 from vpa.beserver.resources.current_user import CurrentUserResource  
+from vpa.beserver.resources.export_user_parking_history import UserReservationHistoryResource
 
 
 def register_resources(api):
@@ -26,6 +27,9 @@ def register_resources(api):
     api.add_resource(ReservationListResource, "/api/reservations")
     api.add_resource(UserReservationListResource, "/api/myreservations")
     api.add_resource(UserReservationResource, "/api/myreservations/<int:reservation_id>")
+
+    #parking history export
+    api.add_resource(UserReservationHistoryResource, "/api/export-history")
 
 
 

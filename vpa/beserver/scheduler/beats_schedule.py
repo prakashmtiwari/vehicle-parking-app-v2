@@ -33,6 +33,6 @@ beat_schedule={
             "monthly-activity-report": {
             "task": "vpa.beserver.tasks.reports.send_monthly_activity_report",
             "schedule": parse_cron_string(os.environ.get("MONTHLY_REPORT_CRON", "0 1 1 * *")),
-            "args": (), 
-            }
+            "args": (),
+            },
         }
