@@ -1,7 +1,7 @@
 <script setup>
 import AdminNavbar from '@/components/AdminNavbar.vue'
 import AdminFooter from '@/components/AdminFooter.vue'
-import AdminParkingHistory from '@/components/adminParkingHistory.vue';
+import AdminSearch from '@/components/AdminSearch.vue';
 </script>
 
 <template>
@@ -9,10 +9,8 @@ import AdminParkingHistory from '@/components/adminParkingHistory.vue';
     <AdminNavbar />
 
     <main class="content">
-      <h1>Welcome, Admin</h1>
-      <p>Here you can manage users, view reports, and configure settings.</p>
-
-      <AdminParkingHistory />
+      <p>Welcome to the Admin Dashboard. Use the search below to find parking lots, spots, or users.</p>
+        <AdminSearch />
 
     </main>
     

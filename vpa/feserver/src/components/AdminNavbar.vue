@@ -12,7 +12,6 @@ import LogoutButton from '@/components/LogoutButton.vue'
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/admin" class="text-white">Home</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/parking-lots" class="text-white">Parking Lots</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/users" class="text-white">Users</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/search" class="text-white">Search</router-link></li></button>
       <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/admin-summary" class="text-white">Reports</router-link></li></button>
       <LogoutButton />
     </ul>

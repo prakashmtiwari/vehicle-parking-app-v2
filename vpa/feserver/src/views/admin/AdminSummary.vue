@@ -2,6 +2,8 @@
 import AdminNavbar from '@/components/AdminNavbar.vue'
 import AdminFooter from '@/components/AdminFooter.vue'
 import AdminCharts from '@/components/AdminCharts.vue';
+import AdminParkingHistory from '@/components/adminParkingHistory.vue';
+
 
 </script>
 
@@ -11,6 +13,7 @@ import AdminCharts from '@/components/AdminCharts.vue';
 
     <main class="content">
       <p>Here you can see reports of parking history and revenue collected.</p>
+        <AdminParkingHistory /> <br>
 
         <AdminCharts />
     </main>

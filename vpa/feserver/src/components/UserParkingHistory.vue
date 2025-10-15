@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import reservationService from "@/services/reservationService" 
+import ExportButton from "@/components/ExportButton.vue"
 import { useAuthStore } from "@/stores/auth"
 import { Tooltip, Modal } from "bootstrap"
+
 
 
 const authStore = useAuthStore()
@@ -113,7 +115,7 @@ onMounted(() => {
 
       <!-- Export Button aligned to the right -->
       <div class="mb-3 text-end"> 
-      <button type="button" class="btn btn-outline-info" v-on:click="triggerExport()">Export My Parking History</button>
+        <ExportButton />
       </div>
 
 

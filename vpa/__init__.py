@@ -5,6 +5,9 @@ from vpa.beserver.config import DevelopmentConfig
 from vpa.beserver.extensions import db, migrate,jwt,cache
 from vpa.beserver.models import User, Role
 from vpa.beserver.routes.auth import auth_bp
+from vpa.beserver.routes.admin import admin_bp  
+from vpa.beserver.routes.export_history import export_bp
+from vpa.beserver.routes.admin_search import search_bp
 from vpa.beserver.api_routes import register_resources
 from vpa.beserver.scheduler.init_celery import init_celery, celery
 
@@ -32,6 +35,9 @@ def create_app(config_class=DevelopmentConfig):
 
     # Register blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(export_bp)
+    app.register_blueprint(search_bp)
 
     # Register RESTful resources
     register_resources(api)
