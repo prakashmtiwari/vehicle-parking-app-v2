@@ -92,9 +92,11 @@ async function triggerSearch() {
   }
 
   try {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("token");
+    console.log("TOKEN:", token);
+
     let API_URL_BASE = `http://localhost:5000`
-    let endpoint = `/api/search/${filter.value}`;
+    let endpoint = `/search/${filter.value}`;
     const params = {};
 
     if (filter.value === "spots") {
@@ -109,6 +111,11 @@ async function triggerSearch() {
         toast.warning("Please enter a search term.");
         return;
       }
+    }
+
+    if (!token) {
+        toast.error("Session expired. Please log in again.");
+        return;
     }
 
     const res = await axios.get(`${API_URL_BASE}${endpoint}`, {

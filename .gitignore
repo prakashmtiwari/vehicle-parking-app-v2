@@ -34,3 +34,5 @@ dev.sqlite
 migrations/versions/__pycache__/
 migrations/
 
+#frontend
+package.json
