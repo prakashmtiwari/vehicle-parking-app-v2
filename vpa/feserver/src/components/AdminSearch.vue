@@ -1,9 +1,12 @@
 <template>
+  <div class="d-flex items-center justify-center min-h-screen">
   <div class="p-6 max-w-2xl mx-auto">
+    <div class="d-flex justify-content-center">
     <h2 class="text-2xl font-semibold mb-6">🔍 Search</h2>
+    </div><br>
 
     <!-- Filter Selector -->
-    <div class="flex gap-3 mb-4">
+    <div class="d-flex gap-3 mb-5 justify-content-center">
       <select v-model="filter" class="border p-2 rounded w-1/3">
         <option disabled value="">Select Filter</option>
         <option value="lots">Parking Lots</option>
@@ -27,7 +30,9 @@
         @keyup.enter="triggerSearch"
       />
     </div>
-
+  
+    <!-- Search Button -->
+    <div class="d-flex align-items-center justify-content-center">
     <button
       :disabled="!filter"
       @click="triggerSearch"
@@ -35,6 +40,7 @@
     >
       Search
     </button>
+    </div><br> <br>
 
     <!-- Results Section -->
     <div v-if="results.length" class="mt-6">
@@ -71,6 +77,7 @@
 
     <p v-else-if="searched" class="mt-6 text-gray-500 italic">No results found.</p>
   </div>
+</div>
 </template>
 
 <script setup>
