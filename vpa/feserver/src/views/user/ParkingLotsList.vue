@@ -2,7 +2,7 @@
   <UserNavbar />
 
   <div class="container my-5">
-    <h2 class="mb-4 text-center">All Available Parking Lots</h2>
+    <h2 class="mb-4 custom-text text-center">All Available Parking Lots</h2>
 
     <div v-if="loading" class="text-center py-4">
       <div class="spinner-border text-primary" role="status">
@@ -12,9 +12,9 @@
 
     <div v-else class="row g-4">
       <div v-for="lot in lots" :key="lot.id" class="col-md-6 col-lg-4">
-        <div class="card lot-card h-100 shadow-sm">
+        <div class="card custom-outline lot-card h-100 shadow-sm">
           <!-- Header -->
-          <div class="card-header bg-primary text-white text-center">
+          <div class="card-header text-white text-center">
             <h5 class="mb-0">{{ lot.prime_location_name }}</h5>
           </div>
 
@@ -49,10 +49,10 @@
 
   <!-- Reservation Modal -->
   <div v-if="showReservationModal" class="modal fade show d-block overlay">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog custom-outline modal-md">
       <div class="modal-content p-3">
         <div class="modal-header">
-          <h5 class="modal-title">Reserve Spot in {{ selectedLot?.prime_location_name }}</h5>
+          <h5 class="modal-title custom-text">Reserve Spot in {{ selectedLot?.prime_location_name }}</h5>
           <button type="button" class="btn-close" @click="closeReservationModal"></button>
         </div>
         <div class="modal-body">
@@ -193,5 +193,26 @@ onMounted(loadLots)
 }
 .modal-content {
   border-radius: 0.5rem;
+}
+
+.custom-text{
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+.card-header{
+  background-color: rgb(218, 47, 218);
 }
 </style>

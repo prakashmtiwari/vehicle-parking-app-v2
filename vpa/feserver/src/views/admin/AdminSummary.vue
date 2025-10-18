@@ -12,7 +12,7 @@ import AdminParkingHistory from '@/components/adminParkingHistory.vue';
     <AdminNavbar />
 
     <main class="content">
-      <p>Here you can see reports of parking history and revenue collected.</p>
+      <h6>Here you can see reports of parking history and the collected revenue</h6>
         <AdminParkingHistory /> <br>
 
         <AdminCharts />
@@ -28,4 +28,11 @@ import AdminParkingHistory from '@/components/adminParkingHistory.vue';
   padding: 2rem;
   min-height: calc(100vh - 140px); /* adjust for navbar + footer */
 }
+
+h6 {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  text-align: center;
+  font-weight: 500;
+  font-size:large;
+} 
 </style>

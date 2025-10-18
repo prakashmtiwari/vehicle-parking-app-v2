@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <main class="content container my-5">
-      <h2 class="mb-4 text-primary">All Users Parking History</h2>
+      <h2 class="mb-4 text-custom">All Users Parking History</h2>
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
@@ -13,9 +13,9 @@
 
       <div v-else>
         <div class="card shadow-sm">
-          <div class="card-body">
-            <table class="table table-hover align-middle">
-              <thead class="table-dark">
+          <div class="card-body custom-outline">
+            <table class="table table-hover align-middle table-responsive table-sm">
+              <thead class="table-head">
                 <tr>
                   <th>ID</th>
                   <th>User</th>
@@ -97,6 +97,34 @@
     </div>
   </div>
 </template>
+
+<style scoped>  
+
+.text-custom {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.table-head {
+  background-color: rgb(245, 99, 245);
+  color: white;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+</style>
+
+
 
 <script setup>
 import { ref, onMounted, nextTick } from "vue"

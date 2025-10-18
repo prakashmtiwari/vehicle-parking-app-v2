@@ -2,12 +2,12 @@
   <div class="d-flex items-center justify-center min-h-screen">
   <div class="p-6 max-w-2xl mx-auto">
     <div class="d-flex justify-content-center">
-    <h2 class="text-2xl font-semibold mb-6">🔍 Search</h2>
+    <h2 class="text-2xl text-custom font-semibold mb-6">🔍 Search</h2>
     </div><br>
 
     <!-- Filter Selector -->
     <div class="d-flex gap-3 mb-5 justify-content-center">
-      <select v-model="filter" class="border p-2 rounded w-1/3">
+      <select v-model="filter" class="custom-outline p-2 rounded w-1/3">
         <option disabled value="">Select Filter</option>
         <option value="lots">Parking Lots</option>
         <option value="spots">Parking Spots</option>
@@ -15,7 +15,7 @@
       </select>
 
       <!-- Status dropdown for parking spots -->
-      <select v-if="filter === 'spots'" v-model="status" class="border p-2 rounded w-1/3">
+      <select v-if="filter === 'spots'" v-model="status" class="custom-outline p-2 rounded w-1/3">
         <option disabled value="">Select Status</option>
         <option value="available">Available</option>
         <option value="occupied">Occupied</option>
@@ -26,7 +26,7 @@
         v-if="filter !== 'spots'"
         v-model="query"
         placeholder="Enter search query"
-        class="border p-2 rounded flex-grow"
+        class="custom-outline p-2 rounded flex-grow"
         @keyup.enter="triggerSearch"
       />
     </div>
@@ -36,7 +36,7 @@
     <button
       :disabled="!filter"
       @click="triggerSearch"
-      class="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+      class="bg-blue-600 search custom-outline text-black"
     >
       Search
     </button>
@@ -148,5 +148,35 @@ async function triggerSearch() {
 <style scoped>
 select, input {
   min-width: 150px;
+  font-family: sans-serif;
+  border: 1px solid rgb(218, 47, 218);
 }
+
+.search {
+  background-color: white;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+.text-custom {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
 </style>

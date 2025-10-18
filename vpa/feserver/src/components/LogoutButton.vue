@@ -22,8 +22,13 @@ const handleLogout = () => {
   font-weight: 500;
 }
 
-.custom-btn:hover {
-  background-color: #ff6600; /* pick your hover background */
-  color: white;              /* ensure text stays visible */}
-  
+.custom-btn {
+  color: black !important;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 </style>

@@ -71,7 +71,7 @@ const loginUser = async () => {
         <input v-model="form.password" type="password" id="password" class="form-control" required />
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <button type="submit" class="btn  w-100">Login</button>
     </form>
 
     <p class="mt-3 text-center">
@@ -82,6 +82,7 @@ const loginUser = async () => {
 </template>
 
 <style scoped>
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -114,11 +115,22 @@ button {
   margin-top: 1rem;
 }
 
+.btn {
+  background-color: rgb(218, 47, 218);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+
 .message {
   margin-top: 1rem;
   font-weight: bold;
   text-align: center;
 }
+
 .message.success {
   color: green;
 }
@@ -134,4 +146,19 @@ button {
 .link:hover {
   text-decoration: underline;
 }
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control{
+  font-size: 1rem;
+  border-radius: 2rem;
+}
+
+.mb-4 {
+  font-family:sans-serif;
+  letter-spacing: 1px;
+}
+
 </style>

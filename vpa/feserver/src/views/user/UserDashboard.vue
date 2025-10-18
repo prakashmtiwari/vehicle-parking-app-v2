@@ -15,12 +15,12 @@ const current_user_name = authStore.user?.username
 
     <main class="content">
       <div id="intro">
-      <h1>Welcome {{ current_user_name }} to the parking app.</h1>
+      <h1>Welcome to the parking app</h1>
       </div>
        
-      <div id="intro">
+      <div class="reserve-button">
         <RouterLink to="/parking-lot-list">
-          <button type="button" class="btn btn-primary btn-lg btn-block">Reserve a Parking Spot?</button>
+          <button type="button" class="btn btn-lg">Reserve a Parking Spot?</button>
         </RouterLink>
       </div>
     </main>
@@ -34,9 +34,26 @@ const current_user_name = authStore.user?.username
 <style scoped>
 .content {
   padding: 2rem;
+  padding-bottom: 200px; 
 }
 
 #intro {
-  padding-left: 4rem;
+  padding-left: 24rem;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.reserve-button {
+  margin-top: 2rem;
+  padding-left: 30rem;
+}
+
+.reserve-button .btn {
+  background-color: rgb(218, 47, 218);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 5rem;
+  cursor: pointer;
 }
 </style>

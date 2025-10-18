@@ -50,13 +50,13 @@ onMounted(loadData)
 
 <template>
   <div class="container my-5">
-    <h2 class="mb-4 text-primary">Reservation Summary</h2>
+    <h2 class="mb-4 custom-text">Reservation Summary</h2>
 
     <div class="row">
       <!-- Pie Chart -->
       <div class="col-md-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="text-center">Reservations per Parking Lot</h5>
+        <div class="card custom-outline shadow-sm p-3">
+          <h5 class="text-center custom-text">Reservations per Parking Lot</h5>
           <Pie
             v-if="lotLabels.length"
             :data="{
@@ -87,8 +87,8 @@ onMounted(loadData)
 
       <!-- Bar Chart -->
       <div class="col-md-6">
-        <div class="card shadow-sm p-3">
-          <h5 class="text-center">Amount Paid per Parking Lot (₹)</h5>
+        <div class="card custom-outline shadow-sm p-3">
+          <h5 class="text-center custom-text">Amount Paid per Parking Lot (₹)</h5>
           <Bar
             v-if="lotLabels.length"
             :data="{
@@ -121,3 +121,23 @@ onMounted(loadData)
     </div>
   </div>
 </template>
+
+
+<style scoped>
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+</style>

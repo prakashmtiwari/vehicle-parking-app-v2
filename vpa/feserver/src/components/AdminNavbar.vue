@@ -3,16 +3,16 @@ import LogoutButton from '@/components/LogoutButton.vue'
 </script>
 
 <template>
-  <nav class="navbar">
+  <nav class="navbar navbar-expand-md">
     <div class="navbar-brand">
       <h2>Admin Dashboard</h2>
     </div>
 
     <ul class="navbar-links">
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/admin" class="text-white">Home</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/parking-lots" class="text-white">Parking Lots</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/users" class="text-white">Users</router-link></li></button>
-      <button class="btn btn-outline-light btn-sm custom-btn"><li><router-link to="/admin-summary" class="text-white">Reports</router-link></li></button>
+      <button class="btn  btn-sm custom-btn"><li><router-link to="/admin" class="text-black">Home</router-link></li></button>
+      <button class="btn  btn-sm custom-btn"><li><router-link to="/parking-lots" class="text-black">Parking Lots</router-link></li></button>
+      <button class="btn  btn-sm custom-btn"><li><router-link to="/users" class="text-black">Users</router-link></li></button>
+      <button class="btn  btn-sm custom-btn"><li><router-link to="/admin-summary" class="text-black">Reports</router-link></li></button>
       <LogoutButton />
     </ul>
   </nav>
@@ -23,13 +23,19 @@ import LogoutButton from '@/components/LogoutButton.vue'
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2c3e50;
+  background:   white;
   padding: 1rem 2rem;
+  
 }
+
 
 .navbar-brand h2 {
   margin: 0;
-  color: #ecf0f1;
+  color: rgb(218, 47, 218);
+  font-weight: bold;
+  letter-spacing: -1px;
+  font-family: sans-serif;
+  font-style: italic;
 }
 
 .navbar-links {
@@ -45,7 +51,14 @@ import LogoutButton from '@/components/LogoutButton.vue'
   font-weight: 500;
 }
 
-.custom-btn:hover {
-  background-color: #f1a978; /* pick your hover background */
-  color: white;              /* ensure text stays visible */}
+.custom-btn{
+  background: transparent;
+  border: none;
+  color: #ecf0f1;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
 </style>

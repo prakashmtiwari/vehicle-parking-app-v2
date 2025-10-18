@@ -3,12 +3,12 @@
 
   <div class="container my-5 d-flex flex-column align-items-center">
     <!-- Heading -->
-    <h2 class="mb-4 text-center">Edit User</h2>
+    <h2 class="mb-4 custom-text text-center">Edit User</h2>
 
     <div v-if="error" class="text-danger mb-3 text-center">{{ error }}</div>
 
     <!-- Card/Form -->
-    <div class="card p-4" style="max-width: 600px; width: 100%;">
+    <div class="card custom-outline p-4" style="max-width: 600px; width: 100%;">
       <form @submit.prevent="handleSubmit">
         <!-- Username -->
         <div class="mb-3">
@@ -85,6 +85,27 @@
 
   <AdminFooter />
 </template>
+
+<style scoped>
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+</style>
+
 
 
 <script setup>

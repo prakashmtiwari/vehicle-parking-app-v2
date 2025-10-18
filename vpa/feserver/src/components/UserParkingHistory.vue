@@ -111,7 +111,7 @@ onMounted(() => {
 
     <main class="content container my-5">
       
-      <h2 class="mb-4 text-primary">Your Parking History (User Id {{ userId }})</h2>
+      <h2 class="mb-4 custom-text">Your Parking History</h2>
 
       <!-- Export Button aligned to the right -->
       <div class="mb-3 text-end"> 
@@ -129,9 +129,9 @@ onMounted(() => {
 
       <div v-else>
         <div class="card shadow-sm">
-          <div class="card-body">
-            <table class="table table-hover align-middle">
-              <thead class="table-dark">
+          <div class="card-body custom-outline">
+            <table class="table table-hover table-sm align-middle">
+              <thead>
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Lot Location</th>
@@ -209,7 +209,7 @@ onMounted(() => {
       aria-hidden="true"
       ref="breakdownModalRef"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog custom-outline">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="breakdownModalLabel">Payment Breakdown</h5>
@@ -237,7 +237,7 @@ onMounted(() => {
   style="display: block;"
   v-if="showPaymentModal"
 >
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog custom-outline modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Confirm Payment</h5>
@@ -262,5 +262,21 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
 
 </style>

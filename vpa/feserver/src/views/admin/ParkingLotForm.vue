@@ -2,11 +2,11 @@
   <AdminNavbar />
 
   <div class="container my-5">
-    <h2 class="mb-4">
+    <h2 class="mb-4 custom-text">
       {{ isEdit ? "Edit Parking Lot" : "Add Parking Lot" }}
     </h2>
   
-  <div class="card p-4 d-flex flex-column" style="max-height: 80vh; overflow-y: auto;">
+  <div class="card custom-outline p-4 d-flex flex-column" style="max-height: 80vh; overflow-y: auto;">
   
    <form @submit.prevent="handleSubmit">
   <!-- Prime Location -->
@@ -86,8 +86,33 @@
 </div>
 </div>
 
-  <AdminFooter />
+<AdminFooter />
 </template>
+
+
+<style scoped>
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+</style>
+
+
+
 
 <script setup>
 import { reactive, ref, onMounted, computed } from "vue"

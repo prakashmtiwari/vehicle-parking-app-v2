@@ -2,10 +2,10 @@
   <AdminNavbar />
 
   <div class="container my-5">
-    <h2 class="mb-4">User Management</h2>
+    <h2 class="mb-4 custom-text">User Management</h2>
 
 
-    <div class="card p-3">
+    <div class="card custom-outline p-3">
       <h3>Users</h3>
 
       <div v-if="loading" class="py-4 text-center">
@@ -15,7 +15,7 @@
       </div>
 
       <div v-else>
-        <table class="table table-striped mt-3">
+        <table class="table table-hover align-middle table-responsive table-sm mt-3">
           <thead>
             <tr>
               <th>ID</th>
@@ -57,6 +57,27 @@
 
   <AdminFooter />
 </template>
+
+<style scoped>
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+</style>
+
 
 <script setup>
 import { ref, onMounted } from "vue"

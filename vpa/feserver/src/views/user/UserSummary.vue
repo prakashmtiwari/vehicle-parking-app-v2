@@ -11,7 +11,7 @@ import UserCharts from '@/components/UserCharts.vue';
 
     <main class="content">
       <div id="intro">
-      <p>Here you can see your parking reservation history charts and summary.</p>
+      <h6>Here you can see your parking reservation history charts and summary.</h6>
       </div>
       <UserParkingHistory />
       <UserCharts />
@@ -30,5 +30,10 @@ import UserCharts from '@/components/UserCharts.vue';
 
 #intro {
   padding-left: 4rem;
+}
+
+h6 {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  text-align: center;
 }
 </style>

@@ -24,6 +24,7 @@
   }
   .mt-3 {
     margin-top: 1rem;
+    color: black;
   }
   .mt-4 {
     margin-top: 1.5rem;
@@ -52,12 +53,12 @@
     font-weight: normal;
   }
   .btn {
-    text-decoration: none;    
-    color: rgb(57, 173, 226);
-  }
-  .btn:hover { 
-    text-decoration: none;
-    color: rgb(131, 10, 10);   
-    opacity: 0.8;
-  }   
+    background-color: rgb(218, 47, 218);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    border-radius: 5rem;
+    cursor: pointer;
+}
 </style>  

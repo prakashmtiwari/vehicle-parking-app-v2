@@ -6,8 +6,8 @@
 
 <style scoped>
 .footer {
-  background: #2c3e50;
-  color: #ecf0f1;
+  background: rgb(218, 47, 218);
+  color: black;
   text-align: center;
   padding: 1rem;
   position: fixed;

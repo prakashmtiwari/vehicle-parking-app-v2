@@ -108,18 +108,57 @@ onMounted(loadReservations)
 
 <template>
   <div class="container my-5">
-    <h2 class="text-center mb-4 text-primary">Admin Reservation Summary</h2>
+    <h2 class="text-center custom-text mb-4">Admin Reservation Summary</h2>
 
     <div class="row">
       <!-- Pie Chart -->
       <div class="col-12 col-md-6 mb-4">
-        <canvas id="pieChart"></canvas>
+        <div class="card custom-outline shadow-sm p-3">
+          <h5 class="text-center custom-text">Reservations per Parking Lot</h5>
+          <canvas id="pieChart"></canvas>
+        </div>
       </div>
 
       <!-- Bar Chart -->
       <div class="col-12 col-md-6 mb-4">
-        <canvas id="barChart"></canvas>
+        <div class="card custom-outline shadow-sm p-3">
+          <h5 class="text-center custom-text">Amount Paid per Parking Lot (₹)</h5>
+          <canvas id="barChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+
+.card {
+  background-color: #fff;
+}
+
+@media (max-width: 767px) {
+  h5 {
+    font-size: 1rem;
+  }
+}
+
+
+
+.custom-text {
+  color: rgb(218, 47, 218);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
+}
+
+.custom-outline:focus {
+  outline: none;
+  border-color: rgb(245, 99, 245); 
+  box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+</style>

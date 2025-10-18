@@ -69,7 +69,7 @@ const registerUser = async () => {
         <input v-model="form.last_name" placeholder="Enter last name" />
       </div>
 
-      <button class="btn btn-primary" @click="registerUser">Register</button>
+      <button class="btn" @click="registerUser">Register</button>
 
       <div v-if="message" :class="['message', messageType]">
         {{ message }}
@@ -133,5 +133,21 @@ button {
 }
 .link:hover {
   text-decoration: underline;
+}
+
+.btn {
+  background-color: rgb(218, 47, 218);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-family: sans-serif;
 }
 </style>

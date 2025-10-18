@@ -41,7 +41,8 @@ celery -A vpa.beserver.scheduler.celery_runner beat --loglevel=info
 
 
 #Frontend 
-
+node
+v22.19.0
 #install vue js
 npm create vue@latest
 
