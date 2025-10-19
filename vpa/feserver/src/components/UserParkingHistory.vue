@@ -111,7 +111,7 @@ onMounted(() => {
 
     <main class="content container my-5">
       
-      <h2 class="mb-4 custom-text">Your Parking History</h2>
+      <h2 class="mb-4 custom-text">My Parking History</h2>
 
       <!-- Export Button aligned to the right -->
       <div class="mb-3 text-end"> 

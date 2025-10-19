@@ -215,4 +215,8 @@ onMounted(loadLots)
 .card-header{
   background-color: rgb(218, 47, 218);
 }
+
+.container{
+padding-bottom: 80px;
+}
 </style>

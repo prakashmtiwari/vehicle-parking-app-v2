@@ -33,8 +33,7 @@ const current_user_name = authStore.user?.username
 
 <style scoped>
 .content {
-  padding: 2rem;
-  padding-bottom: 200px; 
+  padding: 2rem; 
 }
 
 #intro {

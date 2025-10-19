@@ -40,48 +40,83 @@
     >
       Search
     </button>
-    </div><br> <br>
+    </div>
 
     <!-- Results Section -->
-    <div v-if="results.length" class="mt-6">
-      <h3 class="text-lg font-semibold mb-3">Results:</h3>
+   <div v-if="results.length" class="mt-5">
+  <h3 class="text-center text-custom mb-4 fw-semibold">Search Results</h3>
 
-      <div v-if="filter === 'lots'">
-        <ul>
-          <li v-for="lot in results" :key="lot.id" class="border-b py-2">
-            <strong>{{ lot.name }}</strong> — {{ lot.pincode }} <br />
-            <small>{{ lot.address }}</small>
-          </li>
-        </ul>
-      </div>
-
-      <div v-else-if="filter === 'spots'">
-        <ul>
-          <li v-for="spot in results" :key="spot.id" class="border-b py-2">
-            Spot ID: {{ spot.id }} — Lot: {{ spot.lot_id }} — 
-            <span :class="spot.is_occupied ? 'text-red-600' : 'text-green-600'">
-              {{ spot.is_occupied ? 'Occupied' : 'Available' }}
-            </span>
-          </li>
-        </ul>
-      </div>
-
-      <div v-else-if="filter === 'users'">
-        <ul>
-          <li v-for="user in results" :key="user.id" class="border-b py-2">
-            {{ user.username }} — <small>{{ user.email }}</small>
-          </li>
-        </ul>
+  <!-- Parking Lots -->
+  <div v-if="filter === 'lots'" class="row g-3">
+    <div v-for="lot in results" :key="lot.id" class="col-12 col-md-6 col-lg-10">
+      <div class="card  h-100 shadow-sm border-0">
+        <div class="card-body custom-outline text-center">
+          <h5 class="card-title custom-text fw-bold text-primary">{{ lot.name }}</h5>
+          <p class="card-text text-muted mb-1">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ lot.address }}
+          </p>
+          <p class="card-text mb-0">
+            <strong>Pincode:</strong> {{ lot.pincode }}
+          </p>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Parking Spots -->
+  <div v-else-if="filter === 'spots'" class="table-responsive">
+    <table class="table table-hover custom-outline align-middle shadow-sm">
+      <thead class="table-white">
+        <tr>
+          <th scope="col">Spot ID</th>
+          <th scope="col">Lot ID</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="spot in results" :key="spot.id">
+          <td>{{ spot.id }}</td>
+          <td>{{ spot.lot_id }}</td>
+          <td>
+            <span
+              class="badge px-3 py-2"
+              :class="spot.is_occupied ? 'bg-danger' : 'bg-success'"
+            >
+              {{ spot.is_occupied ? 'Occupied' : 'Available' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Users -->
+  <div v-else-if="filter === 'users'" class="row g-3  ">
+    <div v-for="user in results" :key="user.id" class="col-12 col-md-6 col-lg-10">
+      <div class="card h-100 border-1 text-center shadow-sm">
+        <div class="card-body custom-outline">
+          <h5 class="card-title fw-bold text-dark">
+            <i class="bi bi-person-circle me-2 text-primary"></i>{{ user.username }}
+          </h5>
+          <p class="card-text text-muted mb-1">{{ user.email }}</p>
+          <p class="card-text small">
+            {{ user.first_name }} {{ user.last_name }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <p v-else-if="searched" class="mt-6 text-gray-500 italic">No results found.</p>
   </div>
 </div>
 </template>
 
+
 <script setup>
-import { ref } from "vue";
+import { ref,  watch } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 
@@ -143,6 +178,16 @@ async function triggerSearch() {
     console.error(err);
   }
 }
+
+watch(filter, () => {
+  results.value = [];
+  query.value = "";
+  status.value = "";
+  searched.value = false;
+});
+
+
+
 </script>
 
 <style scoped>
@@ -178,5 +223,14 @@ select, input {
   font-weight: bold;
   text-align: center;
 }
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
 
 </style>
