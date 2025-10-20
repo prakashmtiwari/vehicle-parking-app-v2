@@ -48,12 +48,12 @@
 
   <!-- Parking Lots -->
   <div v-if="filter === 'lots'" class="row g-3">
-    <div v-for="lot in results" :key="lot.id" class="col-12 col-md-6 col-lg-10">
+    <div v-for="lot in results" :key="lot.id" class="col-12 col-md-6 col-lg-12">
       <div class="card  h-100 shadow-sm border-0">
         <div class="card-body custom-outline text-center">
-          <h5 class="card-title custom-text fw-bold text-primary">{{ lot.name }}</h5>
+          <h5 class="card-title custom-text fw-bold text-primary">Location: {{ lot.name }}</h5>
           <p class="card-text text-muted mb-1">
-            <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ lot.address }}
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i>Address: {{ lot.address }}
           </p>
           <p class="card-text mb-0">
             <strong>Pincode:</strong> {{ lot.pincode }}
@@ -70,6 +70,7 @@
         <tr>
           <th scope="col">Spot ID</th>
           <th scope="col">Lot ID</th>
+          <th scope="col">Location</th>
           <th scope="col">Status</th>
         </tr>
       </thead>
@@ -77,6 +78,7 @@
         <tr v-for="spot in results" :key="spot.id">
           <td>{{ spot.id }}</td>
           <td>{{ spot.lot_id }}</td>
+          <td>{{ spot.location }}</td>
           <td>
             <span
               class="badge px-3 py-2"
@@ -92,15 +94,15 @@
 
   <!-- Users -->
   <div v-else-if="filter === 'users'" class="row g-3  ">
-    <div v-for="user in results" :key="user.id" class="col-12 col-md-6 col-lg-10">
+    <div v-for="user in results" :key="user.id" class="col-12 col-md-6 col-lg-12">
       <div class="card h-100 border-1 text-center shadow-sm">
         <div class="card-body custom-outline">
           <h5 class="card-title fw-bold text-dark">
-            <i class="bi bi-person-circle me-2 text-primary"></i>{{ user.username }}
+            <i class="bi bi-person-circle me-2 text-primary"></i>Username: {{ user.username }}
           </h5>
-          <p class="card-text text-muted mb-1">{{ user.email }}</p>
+          <p class="card-text text-muted mb-1">Email: {{ user.email }}</p>
           <p class="card-text small">
-            {{ user.first_name }} {{ user.last_name }}
+            Name: {{ user.first_name }} {{ user.last_name }}
           </p>
         </div>
       </div>
@@ -108,8 +110,10 @@
   </div>
 </div>
 
+  <div v-else-if="searched" class="noresults">  
+      <p  class="mt-6 text-gray-500 italic">No results found.</p>
+  </div>
 
-    <p v-else-if="searched" class="mt-6 text-gray-500 italic">No results found.</p>
   </div>
 </div>
 </template>
@@ -232,5 +236,8 @@ select, input {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-
+.noresults{
+  padding-top: 50px;
+  padding-left: 130px;
+}
 </style>

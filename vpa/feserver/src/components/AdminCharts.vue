@@ -111,6 +111,13 @@ onMounted(loadReservations)
     <h2 class="text-center custom-text mb-4">Admin Reservation Summary</h2>
 
     <div class="row">
+
+      <div v-if="reservations.length === 0">
+        <h6 colspan="10" class="text-center text-muted">
+          No reservations found.
+        </h6>
+      </div>
+      <div v-else>
       <!-- Pie Chart -->
       <div class="col-12 col-md-6 mb-4">
         <div class="card custom-outline shadow-sm p-3">
@@ -125,6 +132,7 @@ onMounted(loadReservations)
           <h5 class="text-center custom-text">Amount Paid per Parking Lot (₹)</h5>
           <canvas id="barChart"></canvas>
         </div>
+      </div>
       </div>
     </div>
   </div>

@@ -4,9 +4,10 @@ import reservationService from "@/services/reservationService"
 import ExportButton from "@/components/ExportButton.vue"
 import { useAuthStore } from "@/stores/auth"
 import { Tooltip, Modal } from "bootstrap"
+import { useToast } from "vue-toastification";
 
 
-
+const toast = useToast();
 const authStore = useAuthStore()
 const userId = authStore.user?.id
 
@@ -15,8 +16,13 @@ const loading = ref(false)
 const error = ref("")
 
 const selectedReservation = ref(null)
+const selectedReservationID = ref(null)
 const breakdownModalRef = ref(null)
+const showPaymentModal = ref(false)
+const parkingCost = ref(0)
+
 let breakdownModalInstance = null
+
 
 function formatDateTime(timestamp) {
   if (!timestamp) return '—'
@@ -40,7 +46,7 @@ function initializeTooltips() {
 
 async function triggerExport() {
   const res = await reservationService.exportUserHistory()
-  if (res.ok) alert("Export started! You’ll get an email when it’s ready.");
+  if (res.ok) toast.info("Export started! You’ll get an email when it’s ready.");
 }
 
 
@@ -48,26 +54,14 @@ async function cancelReservation(reservationId) {
   if (confirm("Are you sure you want to cancel this reservation?")) {
     try {
       await reservationService.cancelReservation(reservationId)
-      alert("Reservation cancelled successfully.")
+      toast.info("Reservation cancelled successfully.")
       load_reservations()
     } catch (err) {
-      alert("Failed to cancel reservation.")
+      toast.error("Failed to cancel reservation.")
     }
   }
 }
 
-async function releaseReservation(reservationId) {
-  if (confirm("Release this spot now?")) {
-    try {
-      await reservationService.completeReservation(reservationId)
-      alert("Spot released successfully.")
-      load_reservations()
-      initializeTooltips()
-    } catch (err) {
-      alert("Failed to release spot.")
-    }
-  }
-}
 
 // Modal functions
 function openBreakdownModal(res) {
@@ -76,8 +70,39 @@ function openBreakdownModal(res) {
   breakdownModalInstance.show()
 }
 
+
 function closeBreakdownModal() {
   if (breakdownModalInstance) breakdownModalInstance.hide()
+}
+
+
+async function openPaymentModal(res_id) {
+  try{
+    selectedReservationID.value = res_id
+    const res = await reservationService.getParkingAmount(res_id)
+    console.log('Sucessfully completed the parking cost')  
+    parkingCost.value = res.data.parking_cost
+    console.log(parkingCost)
+  }
+  catch (err){
+    toast.error('Error Calculating the amount to be paid')
+  }
+  finally{
+  showPaymentModal.value = true
+  }
+}
+
+
+async function confirmPayment() {
+  try {
+    //  call your backend payment/complete endpoint
+    await reservationService.completeReservation(selectedReservationID.value)
+    toast.success('Spot released successfully.')
+    showPaymentModal.value = false
+    load_reservations()
+  } catch (err) {
+    toast.error('Failed to release spot.')
+  }
 }
 
 
@@ -157,6 +182,7 @@ onMounted(() => {
                    </td>
                   <td>
                   <!-- Cancel Reservation -->
+                  <div v-if="!res.leaving_timestamp">
                   <button
                     v-if="new Date(res.parking_timestamp) > new Date()" 
                     class="btn btn-sm btn-outline-warning me-2"
@@ -166,13 +192,10 @@ onMounted(() => {
                   </button>
 
                   <!-- Release Spot -->
-                  <button
-                    v-else-if="!res.leaving_timestamp"
-                    class="btn btn-sm btn-outline-danger"
-                    @click="releaseReservation(res.id)"
-                  >
+                  <button v-else class="btn btn-warning btn-sm" @click="openPaymentModal(res.id)">
                     Release Spot
                   </button>
+                  </div>
                 </td>
                 <td>{{ res.amount_paid ? `₹${res.amount_paid}` : '-' }}
                  <button
@@ -237,8 +260,8 @@ onMounted(() => {
   style="display: block;"
   v-if="showPaymentModal"
 >
-  <div class="modal-dialog custom-outline modal-dialog-centered">
-    <div class="modal-content">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content custom-outline">
       <div class="modal-header">
         <h5 class="modal-title">Confirm Payment</h5>
         <button type="button" class="btn-close" @click="showPaymentModal = false"></button>
@@ -246,12 +269,12 @@ onMounted(() => {
       <div class="modal-body">
         <p>
           Are you sure you want to release this spot?<br>
-          Payment Amount: <strong>₹{{ selectedReservation?.amount_paid || 0 }}</strong>
+          Payment Amount: <strong>₹{{ parkingCost?.toFixed(2) || '0.00' }}</strong>
         </p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="showPaymentModal = false">Cancel</button>
-        <button class="btn btn-success" @click="confirmPayment">Confirm & Pay</button>
+        <button class="btn btn-success" @click="confirmPayment()">Confirm & Pay</button>
       </div>
     </div>
   </div>
@@ -277,6 +300,15 @@ onMounted(() => {
   outline: none;
   border-color: rgb(245, 99, 245); 
   box-shadow: 0 0 4px rgb(245, 99, 245);
+}
+
+.modal {
+  background: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1.02);
 }
 
 </style>

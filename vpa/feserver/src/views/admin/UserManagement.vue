@@ -85,7 +85,11 @@ import { useRouter } from "vue-router"
 import userService from "@/services/userManagementService"
 import AdminNavbar from "@/components/AdminNavbar.vue"
 import AdminFooter from "@/components/AdminFooter.vue"
+import { useToast } from "vue-toastification";
 
+
+
+const toast = useToast();
 const users = ref([])
 const loading = ref(false)
 const error = ref("")
@@ -116,7 +120,7 @@ async function deleteUser(id) {
   } catch (err) {
     console.error(err)
     error.value = err.response?.data?.message || err.message || "Failed to delete user"
-    alert(error.value)
+    toast.error(error.value)
   }
 }
 

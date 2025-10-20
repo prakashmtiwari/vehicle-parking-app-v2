@@ -36,7 +36,7 @@ const registerUser = async () => {
 
 <template>
   <div class="register-container">
-    <div class="card">
+    <div class="card custom-outline">
       <h2>Register User</h2>
 
       <div class="form-group">
@@ -88,6 +88,7 @@ const registerUser = async () => {
   align-items: center;
   min-height: 100vh;
   background: #f9f9f9;
+  padding-bottom: 80px;
 }
 
 .card {
@@ -149,5 +150,9 @@ h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   font-family: sans-serif;
+}
+
+.custom-outline {
+  border: 2px solid rgb(218, 47, 218); 
 }
 </style>

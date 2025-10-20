@@ -114,6 +114,10 @@ import { useRoute, useRouter } from "vue-router"
 import userService from "@/services/userManagementService"
 import AdminNavbar from "@/components/AdminNavbar.vue"
 import AdminFooter from "@/components/AdminFooter.vue"
+import { useToast } from "vue-toastification";
+
+
+const toast = useToast()
 
 const route = useRoute()
 const router = useRouter()
@@ -166,7 +170,7 @@ async function handleSubmit() {
   } catch (err) {
     console.error(err)
     error.value = err.response?.data?.message || err.message || "Failed to update user"
-    alert(error.value)
+    toast.error(error.value)
   } finally {
     loading.value = false
   }

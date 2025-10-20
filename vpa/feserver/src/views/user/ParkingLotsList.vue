@@ -94,6 +94,11 @@ import parkingLotService from "@/services/parkingLotService"
 import reservationService from "@/services/reservationService"
 import UserNavbar from '@/components/UserNavbar.vue'
 import UserFooter from '@/components/UserFooter.vue'
+import { useToast } from "vue-toastification";
+
+
+const toast = useToast();
+
 
 const lots = ref([])
 const loading = ref(false)
@@ -144,7 +149,7 @@ async function confirmReservation() {
     // find next available spot
     const availableSpot = selectedLot.value.spots.find(s => s.status === "A")
     if (!availableSpot) {
-      alert("No available spots!")
+      toast.info("No available spots!")
       return
     }
     
@@ -156,13 +161,13 @@ async function confirmReservation() {
     }
 
     await reservationService.createReservation(payload)
-    alert("Reservation successful!")
+    toast.success("Reservation successful!")
 
     closeReservationModal()
     loadLots() // refresh spots
   } catch (err) {
     console.error(err)
-    alert(err.response?.data?.message || err.message || "Failed to reserve spot")
+    toast.error(err.response?.data?.message || err.message || "Failed to reserve spot")
   } finally {
     creating.value = false
   }
@@ -213,7 +218,7 @@ onMounted(loadLots)
 }
 
 .card-header{
-  background-color: rgb(218, 47, 218);
+  background-color: #5C3E94;
 }
 
 .container{

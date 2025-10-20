@@ -12,7 +12,7 @@ flask db migrate -m "initial tables"
 #Apply migrations
 flask db upgrade
 
-#Seed the database with admin role and admin user with superuser priviledges
+#Seed the database with admin role and admin user with superuser priviledges. Run from vpa/beserver
 flask seed
 
 # default username and password for admin is "admin"

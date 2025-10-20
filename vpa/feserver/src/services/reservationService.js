@@ -64,5 +64,12 @@ export default {
     return axios.post(`${API_EXPORT_URL}`, {}, {
       headers: authHeader(),
     })
+  },
+  getParkingAmount(reservationId){
+    return axios.get(`${API_USER_BASE_URL}/${reservationId}`, {
+       headers: authHeader(),
+    })
   }
+
+
 } 

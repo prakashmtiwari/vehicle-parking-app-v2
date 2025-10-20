@@ -130,6 +130,11 @@
 import { ref, onMounted, nextTick } from "vue"
 import reservationService from "@/services/reservationService"
 import { Tooltip, Modal } from "bootstrap"
+import { useToast } from "vue-toastification";
+
+
+const toast = useToast();
+
 
 const reservations = ref([])
 const loading = ref(false)
@@ -176,10 +181,10 @@ async function releaseReservation(reservationId) {
   if (confirm("Release this spot now?")) {
     try {
       await reservationService.completeReservation(reservationId)
-      alert("Spot released successfully.")
+      toast.success("Spot released successfully.")
       load_reservations()
     } catch (err) {
-      alert("Failed to release spot.")
+      toast.error("Failed to release spot.")
     }
   }
 }
@@ -188,10 +193,10 @@ async function cancelReservation(reservationId) {
   if (confirm("Are you sure you want to cancel this reservation?")) {
     try {
       await reservationService.cancelReservation(reservationId)
-      alert("Reservation cancelled successfully.")
+      toast.info("Reservation cancelled successfully.")
       load_reservations()
     } catch (err) {
-      alert("Failed to cancel reservation.")
+      toast.error("Failed to cancel reservation.")
     }
   }
 }

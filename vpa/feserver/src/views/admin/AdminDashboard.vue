@@ -9,7 +9,7 @@ import AdminSearch from '@/components/AdminSearch.vue';
     <AdminNavbar />
 
     <main class="content">
-      <h6>Welcome to the Admin Dashboard. Use the search below to find parking lots, spots, or users.</h6><br></br>
+      <h6>Welcome to the Admin Dashboard. Search below to find parking lots, spots, or users.</h6><br></br>
         <AdminSearch />
 
     </main>
@@ -29,5 +29,10 @@ import AdminSearch from '@/components/AdminSearch.vue';
 h6 {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   text-align: center;
+}
+
+.dashboard{
+  background:   white;
+  width: 100%;
 }
 </style>

@@ -1,3 +1,26 @@
+from datetime import datetime
+from vpa.beserver.models import Reservation, User
+from flask_jwt_extended import get_jwt_identity
+
+
+def compute_parking_cost(reservation_id, current_user_id=None):
+    """Reusable logic to compute cost for a reservation."""
+    reservation = Reservation.query.get_or_404(reservation_id)
+
+    if current_user_id and reservation.user_id != current_user_id:
+        return {"message": "Unauthorized"}, 403
+
+    if reservation.leaving_timestamp is not None:
+        return {"message": "Reservation already completed"}, 400
+
+    reservation.leaving_timestamp = datetime.now()
+
+    try:
+        amount_paid = parking_cost(reservation)
+    except Exception as e:
+        return {"message": f"Error calculating parking cost: {e}"}, 500
+
+    return {"message": "Reservation Cost Computed Successfully", "parking_cost": amount_paid}, 200
 
 
 

@@ -55,4 +55,16 @@ const current_user_name = authStore.user?.username
   border-radius: 5rem;
   cursor: pointer;
 }
-</style>
+
+html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%; /* Ensure html and body also fill the viewport */
+      overflow: hidden; /* Prevent scrolling on the entire page */
+    } 
+.dashboard {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Ensure the dashboard fills the viewport height */
+    }     
+</style>  

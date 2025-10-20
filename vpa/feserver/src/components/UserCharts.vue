@@ -52,6 +52,12 @@ onMounted(loadData)
   <div class="container my-5">
     <h2 class="mb-4 custom-text">Reservation Summary</h2>
 
+    <div v-if="reservations.length === 0">
+        <h6 colspan="10" class="text-center text-muted">
+          No reservations found.
+        </h6>
+    </div>
+     <div v-else>
     <div class="row">
       <!-- Pie Chart -->
       <div class="col-md-6">
@@ -118,6 +124,7 @@ onMounted(loadData)
           />
         </div>
       </div>
+      </div>
     </div>
   </div>
 </template>
@@ -140,4 +147,9 @@ onMounted(loadData)
   border-color: rgb(245, 99, 245); 
   box-shadow: 0 0 4px rgb(245, 99, 245);
 }
+
+.container{
+  padding-bottom: 80px;
+}
+
 </style>

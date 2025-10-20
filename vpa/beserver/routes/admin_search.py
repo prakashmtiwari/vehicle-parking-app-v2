@@ -43,7 +43,7 @@ def search_parking_spots():
 
 
     return jsonify([
-        {"id": s.id, "lot_id": s.lot_id if s.lot_id else "None", "status": s.status}
+        {"id": s.id, "lot_id": s.lot_id if s.lot_id else "None", "location": s.lot.prime_location_name, "status": s.status}
         for s in spots
     ])
 

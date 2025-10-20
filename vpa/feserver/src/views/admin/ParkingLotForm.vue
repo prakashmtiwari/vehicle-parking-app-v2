@@ -1,13 +1,13 @@
 <template>
   <AdminNavbar />
 
-  <div class="container my-5">
+<div class="container my-5" style="width: 80%; overflow-y: auto; overflow-x: hidden;">
     <h2 class="mb-4 custom-text">
       {{ isEdit ? "Edit Parking Lot" : "Add Parking Lot" }}
     </h2>
-  
+
   <div class="card custom-outline p-4 d-flex flex-column" style="max-height: 80vh; overflow-y: auto;">
-  
+
    <form @submit.prevent="handleSubmit">
   <!-- Prime Location -->
   <div class="mb-3">
@@ -109,6 +109,14 @@
   text-align: center;
 }
 
+.container{
+  padding-bottom: 80px;
+  align-items: center;
+  background:   white;
+  padding: 1rem 2rem;
+  overflow-x: hidden;
+  padding: 1rem 2rem;
+}
 </style>
 
 
@@ -120,6 +128,11 @@ import { useRoute, useRouter } from "vue-router"
 import parkingLotService from "@/services/parkingLotService"
 import AdminNavbar from "@/components/AdminNavbar.vue"
 import AdminFooter from "@/components/AdminFooter.vue"
+import { useToast } from "vue-toastification";
+
+
+const toast = useToast();
+
 
 // Router hooks
 const route = useRoute()
@@ -171,7 +184,7 @@ async function handleSubmit() {
   try {
     // Validation (optional)
     if (!form.prime_location_name || !form.price || !form.address || !form.maximum_number_of_spots) {
-      alert("Please fill all required fields.")
+      toast.error("Please fill all required fields.")
       return
     }
 
@@ -188,7 +201,7 @@ async function handleSubmit() {
   } catch (err) {
     console.error(err)
     error.value = err.response?.data?.message || err.message || "Failed to save lot"
-    alert(error.value)
+    toast.error(error.value)
   } finally {
     loading.value = false
   }

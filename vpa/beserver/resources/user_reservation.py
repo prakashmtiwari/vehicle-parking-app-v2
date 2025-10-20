@@ -5,7 +5,7 @@ from vpa.beserver.models import Reservation, User, Parking_Spot as Spot
 from vpa.beserver.extensions import db
 from datetime import datetime
 from vpa.beserver.utils.decorators import user_required
-from vpa.beserver.utils.parking_cost_calculator import parking_cost
+from vpa.beserver.utils.parking_cost_calculator import parking_cost, compute_parking_cost
 from vpa.beserver.utils.cache_manager import cached_response, clear_cache
 
     
@@ -90,31 +90,33 @@ class UserReservationListResource(Resource):
         
 
 class UserReservationResource(Resource):
+    @user_required
+    def get(self, reservation_id):
+        """ Calculates the parking amount of the reservation"""
+        current_user_id = int(get_jwt_identity())
+        return compute_parking_cost(reservation_id, current_user_id)
+
+
     @jwt_required()
     @user_required  
     def post(self, reservation_id):
         """User completes their own reservation by paying and freeing the spot"""
-
-        current_user = User.query.get(int(get_jwt_identity()))
-        reservation = Reservation.query.get_or_404(reservation_id)
-
-        if reservation.user_id != current_user.id:
-            return {"message": "Unauthorized"}, 403
-
-        if reservation.leaving_timestamp is not None:
-            return {"message": "Reservation already completed"}, 400
+        # make get api call to get the parking cost
+        current_user_id = int(get_jwt_identity())
         
-        reservation.leaving_timestamp = datetime.now()
-
-
-        # Calculate amount based on duration
         try:
-            amount_paid = parking_cost(reservation)
-            
+          parking_cost_response = compute_parking_cost(reservation_id, current_user_id)
+
+
+          parking_cost = parking_cost_response[0]["parking_cost"]
+
+          amount_paid = parking_cost
+        
         except Exception as e:
             return {"message": f"Error calculating parking cost: {e}"}, 500   
 
      
+        reservation = Reservation.query.get_or_404(reservation_id)
 
         # Update spot status back to 'A' (Available)
         spot = Spot.query.get(reservation.spot_id)

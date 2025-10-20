@@ -12,7 +12,7 @@
     </div>
 
     <div class="card custom-outline p-3">
-      <h3>Parking Lots</h3>
+      <h3 class="text-custom">Parking Lots</h3>
 
       <div v-if="loading" class="py-4 text-center">
         <div class="spinner-border" role="status">
@@ -72,7 +72,7 @@
     <div class="modal-dialog custom-outline modal-lg">
       <div class="modal-content p-3">
         <div class="modal-header">
-          <h5 class="modal-title">Parking Spots for Lot {{ selectedLotId }}</h5>
+          <h5 class="modal-title text-custom">Parking Spots for Lot {{ selectedLotId }}</h5>
           <button type="button" class="btn-close" @click="closeSpotsModal"></button>
         </div>
         <div class="modal-body">
@@ -121,7 +121,7 @@
   <div class="modal-dialog custom-outline">
     <div class="modal-content p-3">
       <div class="modal-header">
-        <h5 class="modal-title">Address for {{ selectedLotName }}</h5>
+        <h5 class="modal-title text-custom">Address for {{ selectedLotName }}</h5>
       </div>
       <div class="modal-body">
         <p>{{ selectedLotAddress }}</p>
@@ -142,7 +142,10 @@
   import parkingLotService from "@/services/parkingLotService"
   import AdminNavbar from '@/components/AdminNavbar.vue'
   import AdminFooter from '@/components/AdminFooter.vue'
+  import { useToast } from "vue-toastification";
 
+
+  const toast = useToast()
   const lots = ref([])
   const loading = ref(false)
   const error = ref("")
@@ -188,7 +191,7 @@
       console.error(err)
       // backend should return helpful message if cannot delete
       error.value = err.response?.data?.message || err.message || "Failed to delete lot"
-      alert(error.value)
+      toast.error(error.value)
     }
   }
 
@@ -241,7 +244,7 @@ function closeAddressModal() {
   } catch (err) {
     console.error(err)
     error.value = err.response?.data?.message || err.message || "Failed to release spot"
-    alert(error.value)
+    toast.error(error.value)
   }
 }
 
