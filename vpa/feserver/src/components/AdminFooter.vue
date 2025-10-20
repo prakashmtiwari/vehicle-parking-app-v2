@@ -9,10 +9,14 @@
   background: rgb(218, 47, 218);
   color: black;
   text-align: center;
-  padding: 1rem;
+  padding-top: 20px;   
   position: fixed;
   bottom: 0;
   width: 100%;
-  border-top: 10px;
+  margin-top: 40px;
+  border-top: 2px;
 }
 </style>
+
+ 
+ 

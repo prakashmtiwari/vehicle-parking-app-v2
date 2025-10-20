@@ -13,9 +13,27 @@ const form = reactive({
 
 const message = ref('')
 const messageType = ref('') // "success" or "error"
+const emailError = ref('')
+
+
+function validateEmail() {
+  const email = form.email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  emailError.value = email && !emailRegex.test(email)
+    ? 'Please enter a valid email address'
+    : ''
+}
+
 
 const registerUser = async () => {
   message.value = ''
+
+  validateEmail()
+  if (emailError.value) {
+    message.value = emailError.value
+    messageType.value = 'error'
+    return
+  }
 
   if (form.password !== form.confirmPassword) {
     message.value = 'Passwords do not match!'
@@ -41,7 +59,8 @@ const registerUser = async () => {
 
       <div class="form-group">
         <label>Email</label>
-        <input v-model="form.email" type="email" placeholder="Enter email" />
+        <input v-model="form.email" type="email" @input="validateEmail" placeholder="Enter email address" />
+        <p v-if="emailError" class="text-danger">{{ emailError }}</p>
       </div>
 
       <div class="form-group">
@@ -69,7 +88,7 @@ const registerUser = async () => {
         <input v-model="form.last_name" placeholder="Enter last name" />
       </div>
 
-      <button class="btn" @click="registerUser">Register</button>
+      <button class="btn" :disabled="!form.email || !form.password || !form.username" @click="registerUser">Register</button>
 
       <div v-if="message" :class="['message', messageType]">
         {{ message }}
@@ -153,6 +172,12 @@ h2 {
 }
 
 .custom-outline {
-  border: 2px solid rgb(218, 47, 218); 
+  border: 1px solid rgb(218, 47, 218); 
 }
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 </style>

@@ -4,6 +4,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
 
 <template>
   <nav class="navbar navbar-expand-md">
+    <div class="container-fluid">
     <div class="navbar-brand">
       <h2>Admin Dashboard</h2>
     </div>
@@ -15,6 +16,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
       <button class="btn  btn-sm custom-btn"><li><router-link to="/admin-summary" class="text-black">Reports</router-link></li></button>
       <LogoutButton />
     </ul>
+    </div>
   </nav>
 </template>
 
@@ -24,8 +26,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
   justify-content: space-between;
   align-items: center;
   background:   white;
-  padding: 1rem 2rem;
-  
+  padding: 1rem 2rem; 
 }
 
 

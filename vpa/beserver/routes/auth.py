@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from vpa.beserver.extensions import db
 from vpa.beserver.models import User, Role
+from vpa.beserver.utils.email_validator import is_valid_email
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -8,10 +9,14 @@ from flask_jwt_extended import (
 )
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
+import re
+import logging
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+logging.basicConfig(level=logging.INFO)
 
+logger = logging.getLogger(__name__)
 # ------------------------
 # REGISTER ENDPOINT
 # ------------------------
@@ -26,22 +31,35 @@ def register():
         first_name = data.get("first_name", "")
         last_name = data.get("last_name", "")
     except Exception as e:
+        logger.exception(f"User Registration Failed; {e}")
         return jsonify({"message": f"Error processing input data: {e}"}), 400
 
     # basic validation
     if not username or not password:
+        logger.error("Both Username and Password not provided!!")
         return jsonify({"message": "username and password are required"}), 400
 
     if username.lower() == "admin":
+        logger.error("Tried to create user with username admin!!")
         return jsonify({"message": "username 'admin' is reserved."}), 400
-
-    if User.query.filter_by(username=username).first():
-        return jsonify({"message": "Username already exists"}), 400
-
+    
     if User.query.filter_by(email=email).first():
+        logger.error(f"User with email address: {email} exists already!!")
         return jsonify({"message": "Email already exists"}), 400
 
+    if User.query.filter_by(username=username).first():
+        logger.error(f"User with username: {username} exists already!!")
+        return jsonify({"message": "Username already exists"}), 400
+    
+    #check if email is valid
+    if email:
+        if is_valid_email(email):
+            logger.info(f"The Submitted Email Address '{email}' is valid")
+        else:
+            logger.error(f"The Submitted Email Address '{email}' is invalid")
+
     if len(password) < 6:
+        logger.error(f"The provided password is too short!!")
         return jsonify({"message": "password too short, at least 6 characters required."}), 400
 
     try:

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center mt-5">
+  <div class="text-center homepage mt-5">
     <h1>Welcome to the Vehicle Parking App</h1>
     <h2>Book your spots with ease</h2>
 
@@ -61,4 +61,9 @@
     border-radius: 5rem;
     cursor: pointer;
 }
+
+ .homepage{
+   width: 100%;
+   height: auto;
+ }
 </style>  

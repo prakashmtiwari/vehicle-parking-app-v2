@@ -301,7 +301,7 @@ function closeAddressModal() {
 }
 
 .custom-outline {
-  border: 2px solid rgb(218, 47, 218); 
+  border: 1px solid rgb(218, 47, 218); 
 }
 
 .custom-outline:focus {

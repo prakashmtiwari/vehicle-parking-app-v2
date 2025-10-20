@@ -1,9 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, nextTick } from "vue"
 import { Chart, registerables } from "chart.js"
 import reservationService from "@/services/reservationService"
+import { useToast } from "vue-toastification";
+import annotationPlugin from 'chartjs-plugin-annotation'
 
-Chart.register(...registerables)
+const toast = useToast();
+
+Chart.register(...registerables, annotationPlugin)
+
 
 const reservations = ref([])
 let pieChartInstance = null
@@ -13,9 +18,11 @@ async function loadReservations() {
   try {
     const res = await reservationService.getAllReservations()
     reservations.value = res.data
+    await nextTick()
     renderCharts()
   } catch (err) {
     console.error("Error loading reservations:", err)
+    toast.error("Error loading reservations")
   }
 }
 
@@ -107,35 +114,34 @@ onMounted(loadReservations)
 </script>
 
 <template>
-  <div class="container my-5">
-    <h2 class="text-center custom-text mb-4">Admin Reservation Summary</h2>
+ <div class="container my-5">
+  <h2 class="text-center custom-text mb-4">Admin Reservation Summary</h2>
 
-    <div class="row">
+  <!-- No Reservations Message -->
+  <div v-if="reservations.length === 0" class="text-center text-muted">
+    <h6>No reservations found.</h6>
+  </div>
 
-      <div v-if="reservations.length === 0">
-        <h6 colspan="10" class="text-center text-muted">
-          No reservations found.
-        </h6>
+  <!-- Charts Row -->
+  <div v-else class="row">
+    <!-- Pie Chart -->
+    <div class="col-12 col-md-6 mb-4">
+      <div class="card custom-outline shadow-sm p-3 h-100">
+        <h5 class="text-center custom-text">Reservations per Parking Lot</h5>
+        <canvas id="pieChart"></canvas>
       </div>
-      <div v-else>
-      <!-- Pie Chart -->
-      <div class="col-12 col-md-6 mb-4">
-        <div class="card custom-outline shadow-sm p-3">
-          <h5 class="text-center custom-text">Reservations per Parking Lot</h5>
-          <canvas id="pieChart"></canvas>
-        </div>
-      </div>
+    </div>
 
-      <!-- Bar Chart -->
-      <div class="col-12 col-md-6 mb-4">
-        <div class="card custom-outline shadow-sm p-3">
-          <h5 class="text-center custom-text">Amount Paid per Parking Lot (₹)</h5>
-          <canvas id="barChart"></canvas>
-        </div>
-      </div>
+    <!-- Bar Chart -->
+    <div class="col-12 col-md-6 mb-4">
+      <div class="card custom-outline shadow-sm p-3 h-100">
+        <h5 class="text-center custom-text">Amount Paid per Parking Lot (₹)</h5>
+        <canvas id="barChart"></canvas>
       </div>
     </div>
   </div>
+</div>
+
 </template>
 
 <style scoped>
@@ -160,7 +166,7 @@ onMounted(loadReservations)
 }
 
 .custom-outline {
-  border: 2px solid rgb(218, 47, 218); 
+  border: 1px solid rgb(218, 47, 218); 
 }
 
 .custom-outline:focus {
