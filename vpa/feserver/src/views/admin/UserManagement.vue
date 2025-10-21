@@ -38,12 +38,12 @@
                 >
                   Edit
                 </button>
-                <button
+                <!-- <button
                   class="btn btn-sm btn-danger"
                   @click="deleteUser(user.id)"
                 >
                   Delete
-                </button>
+                </button> -->
               </td>
             </tr>
             <tr v-if="users.length === 0">
@@ -68,6 +68,7 @@
 
 .custom-outline {
   border: 1px solid rgb(218, 47, 218); 
+  margin-bottom: 20px;
 }
 
 .custom-outline:focus {

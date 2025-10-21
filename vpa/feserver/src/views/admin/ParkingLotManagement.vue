@@ -72,7 +72,7 @@
     <div class="modal-dialog custom-outline modal-lg">
       <div class="modal-content p-3">
         <div class="modal-header">
-          <h5 class="modal-title text-custom">Parking Spots for Lot {{ selectedLotId }}</h5>
+          <h5 class="modal-title text-custom">Parking Spots for Lot ID: {{ selectedLotId }}</h5>
           <button type="button" class="btn-close" @click="closeSpotsModal"></button>
         </div>
         <div class="modal-body">
@@ -82,6 +82,7 @@
                 <th>Spot ID</th>
                 <th>Status</th>
                 <th>Vehicle</th>
+                <th>Parking Start Time</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -94,7 +95,11 @@
                   </span>
                 </td>
                 <td>
-                  <span v-if="spot.status === 'O'">{{ spot.reservation?.vehicle_number || '—' }}</span>
+                  <span v-if="spot.status === 'O'">{{ spot.active_reservation?.vehicle_number || '—' }}</span>
+                  <span v-else>-</span>
+                </td>
+                <td>
+                  <span v-if="spot.status === 'O'">{{ formatDateTime(spot.active_reservation?.parking_timestamp) || '—' }}</span>
                   <span v-else>-</span>
                 </td>
                 <td>
@@ -166,6 +171,21 @@
 
   const selectedLotSpots = ref(null)
   const selectedLotId = ref(null)
+
+
+ function formatDateTime(timestamp) {
+    if (!timestamp) return "—"
+    const date = new Date(timestamp)
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    })
+  }
+
 
   async function loadLots() {
     loading.value = true
@@ -302,6 +322,7 @@ function closeAddressModal() {
 
 .custom-outline {
   border: 1px solid rgb(218, 47, 218); 
+  margin-bottom: 20px;
 }
 
 .custom-outline:focus {

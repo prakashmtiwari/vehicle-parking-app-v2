@@ -92,3 +92,16 @@ class Reservation(db.Model):
         return f"<Reservation {self.id} - Spot {self.spot_id} - User {self.user_id}>"
     
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "spot_id": self.spot_id,
+            "vehicle_number": self.vehicle_number,
+            "user_id": self.user_id,
+            "lot_id": self.lot_id,
+            "parking_timestamp": self.parking_timestamp.isoformat() if self.parking_timestamp else None,
+            "leaving_timestamp": self.leaving_timestamp.isoformat() if self.leaving_timestamp else None,
+            "amount_paid": self.amount_paid
+        }
+    
+

@@ -72,6 +72,7 @@ button {
 
 .custom-outline {
   border: 1px solid rgb(218, 47, 218); 
+  margin-bottom: 20px;
 }
 
 .custom-outline:focus {

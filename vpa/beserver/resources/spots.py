@@ -13,13 +13,27 @@ class SpotListResource(Resource):
     def get(self, lot_id):
         lot = Parking_Lot.query.get_or_404(lot_id)
         spots = lot.spots 
-        return [
+
+        occupied_spots = {}
+
+        for spot in spots:
+         for reservation in spot.reservation:
+            if reservation.leaving_timestamp is None:
+                occupied_spots[spot.id] = reservation  # use spot.id as key (safer for JSON)
+                break
+
+        response = [
             {
                 "id": s.id,
                 "status": s.status,
-                "lot_id": s.lot_id
-            } for s in spots
-        ], 200
+                "lot_id": s.lot_id,
+                "active_reservation": occupied_spots[s.id].to_dict() if s.id in occupied_spots else None
+            }
+            for s in spots
+        ]
+
+        return response, 200
+
 
     @jwt_required()
     @admin_required
