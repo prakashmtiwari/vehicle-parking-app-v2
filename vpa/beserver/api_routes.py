@@ -31,8 +31,5 @@ def register_resources(api):
     #parking history export
     api.add_resource(UserReservationHistoryResource, "/api/export-history")
 
-
-
-
     # User Endpoints
     api.add_resource(CurrentUserResource, "/self")

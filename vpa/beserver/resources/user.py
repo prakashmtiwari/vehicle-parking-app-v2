@@ -52,6 +52,7 @@ class UserResource(Resource):
             }, 200  
         except Exception as e:
             return {"message": f"Error fetching user: {e}"}, 500
+        
 
     @jwt_required()
     @admin_required
@@ -77,10 +78,4 @@ class UserResource(Resource):
             db.session.rollback()
             return {"message": f"Error updating user: {e}"}, 500    
 
-    @jwt_required()
-    @admin_required
-    def delete(self, user_id):
-        user = User.query.get_or_404(user_id)
-        db.session.delete(user)
-        db.session.commit()
-        return {"message": "User deleted"}, 200
+

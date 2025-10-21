@@ -129,6 +129,12 @@ class ParkingLotResource(Resource):
     @admin_required
     def delete(self, lot_id):
         lot = Parking_Lot.query.get_or_404(lot_id)
+        #check if the parking spots are available
+         
+        for spot in lot.spots:
+            if spot.status == "O":
+                return {"message": "All the parking spots are not unoccupied !!!"}, 400
+        
         db.session.delete(lot)
         db.session.commit()
         return {"message": "Parking lot deleted"}, 200

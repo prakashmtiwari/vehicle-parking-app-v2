@@ -8,7 +8,7 @@
       <div>
         <router-link to="/parking-lots/new" class="btn custom-outline add-lot ">+ Add Parking Lot</router-link>
       </div>
-      <div v-if="error" class="text-danger">{{ error }}</div>
+      <!-- <div v-if="error" class="text-danger">{{ error }}</div> -->
     </div>
 
     <div class="card custom-outline p-3">
@@ -83,7 +83,7 @@
                 <th>Status</th>
                 <th>Vehicle</th>
                 <th>Parking Start Time</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
             <tbody>
@@ -102,14 +102,14 @@
                   <span v-if="spot.status === 'O'">{{ formatDateTime(spot.active_reservation?.parking_timestamp) || '—' }}</span>
                   <span v-else>-</span>
                 </td>
-                <td>
+                <!-- <td>
                   <button
                     v-if="spot.status === 'O'"
                     class="btn btn-sm btn-secondary"
                     @click="releaseSpot(spot.id)"
                   >Free Spot</button>
                   <span v-else>-</span>
-                </td>
+                </td> -->
               </tr>
               <tr v-if="selectedLotSpots.length === 0">
                 <td colspan="3" class="text-center">No spots found</td>
@@ -203,7 +203,7 @@
 
   
   async function deleteLot(id) {
-    if (!confirm("Are you sure you want to delete this lot?")) return
+    if (!confirm("Are you sure you want to delete this parking lot?")) return
     try {
       await parkingLotService.deleteLot(id)
       await loadLots()
