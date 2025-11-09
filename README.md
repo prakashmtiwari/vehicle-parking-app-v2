@@ -137,3 +137,7 @@ echo "This is a test email body" | mail -s "Test Email" you@example.com
 sudo tail -f /var/log/mail.log
 
 
+
+
+
+#For sending the monthly report of previous month change in vpa/beserver/tasks/reports.py  line number 255 uncomment and comment 256

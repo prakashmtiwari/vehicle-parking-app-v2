@@ -167,40 +167,40 @@ def send_email_via_api(to_email: str, subject: str, html_body: str) -> bool:
         return False
 
 
-# --- Alternative SMTP sender ---
-def send_email_via_smtp(to_email: str, subject: str, html_body: str) -> bool:
-    import smtplib
-    from email.mime.multipart import MIMEMultipart
-    from email.mime.text import MIMEText
+# # --- Alternative SMTP sender ---
+# def send_email_via_smtp(to_email: str, subject: str, html_body: str) -> bool:
+#     import smtplib
+#     from email.mime.multipart import MIMEMultipart
+#     from email.mime.text import MIMEText
 
-    smtp_host = os.getenv("SMTP_HOST")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_pass = os.getenv("SMTP_PASS")
-    from_email = os.getenv("FROM_EMAIL_ADDRESS")
+#     smtp_host = os.getenv("SMTP_HOST")
+#     smtp_port = int(os.getenv("SMTP_PORT", "587"))
+#     smtp_user = os.getenv("SMTP_USER")
+#     smtp_pass = os.getenv("SMTP_PASS")
+#     from_email = os.getenv("FROM_EMAIL_ADDRESS")
 
-    if not all([smtp_host, smtp_user, smtp_pass, from_email]):
-        logger.error("SMTP not configured properly.")
-        return False
+#     if not all([smtp_host, smtp_user, smtp_pass, from_email]):
+#         logger.error("SMTP not configured properly.")
+#         return False
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = from_email
-    msg["To"] = to_email
-    part = MIMEText(html_body, "html")
-    msg.attach(part)
+#     msg = MIMEMultipart("alternative")
+#     msg["Subject"] = subject
+#     msg["From"] = from_email
+#     msg["To"] = to_email
+#     part = MIMEText(html_body, "html")
+#     msg.attach(part)
 
-    try:
-        server = smtplib.SMTP(smtp_host, smtp_port, timeout=20)
-        server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(from_email, [to_email], msg.as_string())
-        server.quit()
-        logger.info("SMTP sent report to %s", to_email)
-        return True
-    except Exception:
-        logger.exception("SMTP send failed")
-        return False
+#     try:
+#         server = smtplib.SMTP(smtp_host, smtp_port, timeout=20)
+#         server.starttls()
+#         server.login(smtp_user, smtp_pass)
+#         server.sendmail(from_email, [to_email], msg.as_string())
+#         server.quit()
+#         logger.info("SMTP sent report to %s", to_email)
+#         return True
+#     except Exception:
+#         logger.exception("SMTP send failed")
+#         return False
 
 
 # --- Report builder ---
@@ -209,12 +209,19 @@ def build_report_html(user, Reservations, stats, year, month):
     enriched = []
     for b in Reservations:
         lot = db.session.query(Parking_Lot).filter(Parking_Lot.id == b.lot_id).first()
-        print(b.lot_id)
         duration = ""
+        
         if getattr(b, "parking_timestamp", None) and getattr(b, "leaving_timestamp", None):
             delta = b.leaving_timestamp - b.parking_timestamp
-            duration = str(delta)
+# Convert timedelta to hours, minutes, seconds
+            total_seconds = int(delta.total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+
+            duration = f"{hours} hours {minutes} minutes {seconds} seconds"
             logger.info(f"Computed duration for reservation {b.id}: {duration}")
+
         enriched.append({
             "created_on": b.parking_timestamp,
             "lot_name": lot.prime_location_name if lot else "Unknown",

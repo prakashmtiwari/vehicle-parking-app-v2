@@ -185,7 +185,7 @@ def send_gmail_daily_reminders_for_all_lots():
                     <p>You haven’t booked a spot here yet — don’t miss out!</p>
 
                     <p>
-                        👉 <a href="http://localhost:5173/parking-lot-list" 
+                        👉 <a href="http://localhost:5173/login" 
                             style="background-color:#007bff; color:white; padding:10px 15px; text-decoration:none; border-radius:6px;">
                             View and Reserve a Spot
                         </a>
