@@ -148,7 +148,7 @@ async function confirmReservation() {
   try {
     //check if the user already has a reservation with an active reservation
     const user_reservations = await reservationService.getUserReservations()
-    const hasActive = user_reservations.data.some(r => !r.leaving_timestamp && new Date(r.parking_timestamp) <= new Date())
+    const hasActive = user_reservations.data.some(r => !r.leaving_timestamp && new Date(r.parking_timestamp) <= new Date() && r.vehicle_number === vehicleNumber.value)
     if (hasActive) {  
       toast.error("This vehicle already has an active reservation!")
       creating.value = false

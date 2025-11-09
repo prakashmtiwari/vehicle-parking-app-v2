@@ -20,11 +20,11 @@ beat_schedule={
             #     "schedule": parse_cron_string(os.environ.get("REMINDER_CRON", "50 14 * * *")),  
             #     "args": (),
             # },
-            # "daily-gmail-reminder": {
-            #     "task": "vpa.beserver.tasks.reminder_tasks.send_gmail_daily_reminders_for_all_lots",
-            #     "schedule": parse_cron_string(os.environ.get("REMINDER_CRON", "50 14 * * *")),  
-            #     "args": (),
-            # },
+            "daily-gmail-reminder": {
+                "task": "vpa.beserver.tasks.reminder_tasks.send_gmail_daily_reminders_for_all_lots",
+                "schedule": parse_cron_string(os.environ.get("REMINDER_CRON", "50 14 * * *")),  
+                "args": (),
+            },
             # "daily-sms-reminder": {
             #     "task": "vpa.beserver.tasks.reminder_tasks.send_sms_daily_reminders_for_all_lots",
             #     "schedule": parse_cron_string(os.environ.get("REMINDER_CRON", "50 14 * * *")),  

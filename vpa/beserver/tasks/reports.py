@@ -34,7 +34,7 @@ def get_user_Reservations_for_month(user_id: int, year: int, month: int):
         .filter(Reservation.parking_timestamp >= start)
         .filter(Reservation.parking_timestamp < end)
     )
-    print(q.all())
+    # print(q.all())
     return q.all()
 
 
@@ -78,7 +78,7 @@ def get_user_monthly_stats(user_id: int, year: int, month: int):
         lot = db.session.query(Parking_Lot).filter(Parking_Lot.id == most_used.lot_id).first()
         most_used_lot = {
             "id": lot.id if lot else None,
-            "name": lot.name if lot else None,
+            "name": lot.prime_location_name if lot else None,
             "count": most_used.cnt
         }
     else:
@@ -89,7 +89,7 @@ def get_user_monthly_stats(user_id: int, year: int, month: int):
         "user_id": user_id,
         "total_Reservations": total_Reservations,
         "total_amount": float(total_amount),
-        "most_used_lot": most_used_lot,
+        "most_used_lot": most_used_lot
     }
 
 
@@ -117,14 +117,14 @@ REPORT_TEMPLATE = """
     <p><strong>Total Reservations:</strong> {{ stats.total_Reservations }}</p>
     <p><strong>Total amount spent:</strong> ₹{{ "%.2f"|format(stats.total_amount) }}</p>
     {% if stats.most_used_lot %}
-      <p><strong>Most used parking lot:</strong> {{ stats.most_used_lot.name }} ({{ stats.most_used_lot.count }} Reservations)</p>
+      <p><strong>Most used parking lot:</strong> {{ stats.most_used_lot.name }} with {{ stats.most_used_lot.count }} Reservations</p>
     {% else %}
       <p>No parking activity this month.</p>
     {% endif %}
   </div>
 
   <div class="card">
-    <h2>Reservations</h2>
+    <h2>All Reservations for the month</h2>
     {% if Reservations %}
       <table>
         <thead><tr><th>Date</th><th>Lot</th><th>Duration</th><th>Amount</th></tr></thead>
@@ -209,6 +209,7 @@ def build_report_html(user, Reservations, stats, year, month):
     enriched = []
     for b in Reservations:
         lot = db.session.query(Parking_Lot).filter(Parking_Lot.id == b.lot_id).first()
+        print(b.lot_id)
         duration = ""
         if getattr(b, "parking_timestamp", None) and getattr(b, "leaving_timestamp", None):
             delta = b.leaving_timestamp - b.parking_timestamp
@@ -216,9 +217,9 @@ def build_report_html(user, Reservations, stats, year, month):
             logger.info(f"Computed duration for reservation {b.id}: {duration}")
         enriched.append({
             "created_on": b.parking_timestamp,
-            "lot_name": lot.name if lot else "Unknown",
-            "duration": duration,
-            "amount_paid": float(getattr(b, "amount_paid", 0)),
+            "lot_name": lot.prime_location_name if lot else "Unknown",
+            "duration": duration if duration else "—",
+            "amount_paid": float(getattr(b, "amount_paid", 0)) if getattr(b, "amount_paid", None) is not None else 0.0  
         })
 
     template = Template(REPORT_TEMPLATE)
@@ -244,7 +245,8 @@ def send_monthly_activity_report(self):
     # Determine the month to report on: previous month
     today = date.today()
     first_of_this_month = date(today.year, today.month, 1)
-    prev_month_last_day = first_of_this_month - timedelta(days=1)
+    # prev_month_last_day = first_of_this_month - timedelta(days=1)
+    prev_month_last_day = first_of_this_month
     report_year = prev_month_last_day.year
     report_month = prev_month_last_day.month
 
@@ -263,9 +265,9 @@ def send_monthly_activity_report(self):
             try:
                 html = build_report_html(user, Reservations, stats, report_year, report_month)
                 subject = f"Your Activity Report — {datetime(report_year, report_month, 1).strftime('%B %Y')}"
-              # choose sender: API or SMTP
             
                 sent = send_email_via_api(user.email, subject, html)
+                print(f"Email sent to {user.email}: {sent}")
 
                 #if not sent:
             #     send_email_via_smtp(user.email, subject, html)

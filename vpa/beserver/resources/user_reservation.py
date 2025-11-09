@@ -33,7 +33,6 @@ class UserReservationListResource(Resource):
 
             res_data = {
                 "id": r.id,
-                "spot_id": r.spot_id,
                 "vehicle_number": r.vehicle_number,
                 "parking_timestamp": r.parking_timestamp.isoformat() if r.parking_timestamp else None,
                 "leaving_timestamp": r.leaving_timestamp.isoformat() if r.leaving_timestamp else None,
@@ -62,13 +61,15 @@ class UserReservationListResource(Resource):
         current_user = User.query.get(int(get_jwt_identity()))
         data = request.get_json()
         parking_timestamp = datetime.strptime(data["parking_timestamp"], "%Y-%m-%dT%H:%M")
-
+        spot = Spot.query.get(data["spot_id"])
+        lot_id = spot.lot_id if spot else None  
 
         try:
             reservation = Reservation(
                 spot_id=data["spot_id"],
                 vehicle_number=data["vehicle_number"],
                 user_id=current_user.id,   # <-- linked to logged-in user
+                lot_id=lot_id,
                 parking_timestamp=parking_timestamp,
                 leaving_timestamp=None,
                 amount_paid=None
