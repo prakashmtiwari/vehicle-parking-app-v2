@@ -26,10 +26,12 @@ export const useAuthStore = defineStore('auth', {
 
       localStorage.setItem(tokenKey, token)
       localStorage.setItem(userKey, JSON.stringify(user))
-    },
+
+  // 👇 This is per-tab (cleared when tab closes)
+      sessionStorage.setItem('active_user', user.username)    },
 
     /**
-     * Logout the current user (only clears their token/data)
+     * Logout the current user (only clear their token/data)
      */
     logout() {
       if (this.user?.username) {
@@ -38,6 +40,12 @@ export const useAuthStore = defineStore('auth', {
 
         localStorage.removeItem(tokenKey)
         localStorage.removeItem(userKey)
+      }
+
+      // 👇 Also clear this tab's active user session
+      const activeUser = sessionStorage.getItem('active_user')
+      if (activeUser === this.user.username) {
+        sessionStorage.removeItem('active_user')
       }
 
       this.token = null
@@ -62,19 +70,7 @@ export const useAuthStore = defineStore('auth', {
         this.token = null
         this.user = null
       }
-    },
+    }
 
-    /**
-     * Optional: clear *all* sessions (useful for admin logout-all)
-     */
-    clearAllSessions() {
-      for (const key in localStorage) {
-        if (key.startsWith('token_') || key.startsWith('user_')) {
-          localStorage.removeItem(key)
-        }
-      }
-      this.token = null
-      this.user = null
-    },
   },
 })
