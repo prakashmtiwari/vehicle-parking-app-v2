@@ -21,16 +21,17 @@ def export_parking_history(self, user_id):
     if not reservations:
         return {"message": "No reservations found."}
 
-    file_name = f"parking_export_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    file_name = f"parking_export_{user.username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     file_path = os.path.join(EXPORT_DIR, file_name)
-    download_url = f"/static/exports/{file_name}"
+    
+    download_url = f"http://localhost:5000/exports/{file_name}"
 
     with open(file_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Reservation ID", "Lot ID", "Spot ID", "Vehicle", "Start Time", "End Time", "Amount Paid"])
+        writer.writerow(["Reservation ID", "Lot Name", "Spot ID", "Vehicle", "Start Time", "End Time", "Amount Paid"])
         for r in reservations:
             writer.writerow([
-                r.id, r.lot_id, r.spot_id, r.vehicle_number,
+                r.id, r.parking_lot.prime_location_name if r.parking_lot else None, r.spot_id, r.vehicle_number,
                 r.parking_timestamp, r.leaving_timestamp, r.amount_paid or 0
             ])
 

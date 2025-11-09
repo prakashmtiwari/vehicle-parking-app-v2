@@ -14,10 +14,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
+import ExportButtonService from "@/services/exportButtonService.js"
 
 const toast = useToast()
 const exporting = ref(false)
-const API_URL = import.meta.env.VITE_API_URL || ''
 
 const triggerExport = async () => {
   exporting.value = true
@@ -25,14 +25,16 @@ const triggerExport = async () => {
 
   try {
     // 1️⃣ Trigger export job
-    const res = await fetch(`${API_URL}/api/export-history`, { method: 'POST' })
-    const data = await res.json()
+    const res = await ExportButtonService.triggerExport()
+    const data = res.data
     const jobId = data.job_id
 
     // 2️⃣ Poll every 3 seconds for job status
     const interval = setInterval(async () => {
-      const statusRes = await fetch(`/api/export-status/${jobId}`)
-      const statusData = await statusRes.json()
+      try {
+        const statusRes = await ExportButtonService.exportStatus(jobId)
+
+      const statusData = statusRes.data
 
       if (statusData.status === 'SUCCESS') {
         clearInterval(interval)
@@ -49,7 +51,12 @@ const triggerExport = async () => {
         exporting.value = false
         toast.error('❌ Export failed. Please try again.')
       }
-    }, 3000)
+
+      } catch (err) {
+        console.error('❌ Error fetching export status:', err)
+      }
+    }, 1000)
+
   } catch (err) {
     console.error(err)
     exporting.value = false

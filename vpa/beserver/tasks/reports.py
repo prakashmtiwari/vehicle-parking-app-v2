@@ -230,7 +230,7 @@ def build_report_html(user, Reservations, stats, year, month):
         year=year,
         Reservations=enriched,
         stats=stats,
-        generated_on=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
+        generated_on=datetime.now().strftime("%Y-%m-%d %H:%M IST"),
     )
     return html
 

@@ -12,4 +12,8 @@ class UserReservationHistoryResource(Resource):
     def post(self):
         user_id = get_jwt_identity()
         job = export_parking_history.delay(user_id)
+
+        if not job:
+           return jsonify({"status": "ERROR", "message": "Job not found"}), 404
+    
         return jsonify({"job_id": job.id}), 202
