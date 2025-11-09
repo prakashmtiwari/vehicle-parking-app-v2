@@ -38,16 +38,16 @@ function formatDateTime(timestamp) {
 }
 
 
-function initializeTooltips() {
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  tooltipTriggerList.forEach(el => new Tooltip(el))
-}
+// function initializeTooltips() {
+//   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+//   tooltipTriggerList.forEach(el => new Tooltip(el))
+// }
 
 
-async function triggerExport() {
-  const res = await reservationService.exportUserHistory()
-  if (res.ok) toast.info("Export started! You’ll get an email when it’s ready.");
-}
+// async function triggerExport() {
+//   const res = await reservationService.exportUserHistory()
+//   if (res.ok) toast.info("Export started! You’ll get an email when it’s ready.");
+// }
 
 
 async function cancelReservation(reservationId) {
@@ -59,6 +59,18 @@ async function cancelReservation(reservationId) {
     } catch (err) {
       toast.error("Failed to cancel reservation.")
     }
+  }
+}
+
+async function confirmPayment() {
+  try {
+    //  call your backend payment/complete endpoint
+    await reservationService.completeReservation(selectedReservationID.value)
+    toast.success('Spot released successfully.')
+    showPaymentModal.value = false
+    load_reservations()
+  } catch (err) {
+    toast.error('Failed to release spot.')
   }
 }
 
@@ -93,20 +105,7 @@ async function openPaymentModal(res_id) {
 }
 
 
-async function confirmPayment() {
-  try {
-    //  call your backend payment/complete endpoint
-    await reservationService.completeReservation(selectedReservationID.value)
-    toast.success('Spot released successfully.')
-    showPaymentModal.value = false
-    load_reservations()
-  } catch (err) {
-    toast.error('Failed to release spot.')
-  }
-}
-
-
-
+// Load user reservations
 async function load_reservations (){
   if (!userId) {
     error.value = "User ID not found"
@@ -176,8 +175,13 @@ onMounted(() => {
                   <td>{{ formatDateTime(res.parking_timestamp) }}</td>
                   <td>{{ formatDateTime(res.leaving_timestamp) || '-' }}</td>
                   <td>
-                    <span :class="(!res.leaving_timestamp) ? 'badge bg-success' : 'badge bg-secondary'">
-                        {{ (!res.leaving_timestamp)  ? 'Active' : 'Completed' }}
+                    <span :class="(!res.leaving_timestamp) ? 'badge bg-success' : 'badge bg-primary'">
+                        {{ res.leaving_timestamp 
+                            ? 'Complete' 
+                            : (new Date(res.parking_timestamp) > new Date() 
+                                ? 'Booked' 
+                                : 'Active') 
+                        }}                    
                     </span>
                    </td>
                   <td>

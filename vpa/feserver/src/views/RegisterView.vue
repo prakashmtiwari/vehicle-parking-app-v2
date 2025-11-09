@@ -1,6 +1,11 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import axios from 'axios'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
+
+const toast = useToast()
+const router = useRouter()
 
 const form = reactive({
   email: '',
@@ -32,12 +37,14 @@ const registerUser = async () => {
   if (emailError.value) {
     message.value = emailError.value
     messageType.value = 'error'
+    toast.error(emailError.value)
     return
   }
 
   if (form.password !== form.confirmPassword) {
     message.value = 'Passwords do not match!'
     messageType.value = 'error'
+    toast.error(message.value)
     return
   }
 
@@ -45,9 +52,17 @@ const registerUser = async () => {
     const res = await axios.post('http://127.0.0.1:5000/auth/register', form)
     message.value = res.data.message
     messageType.value = res.data.success ? 'success' : 'error'
+    if (res.data.success) {
+      toast.success(message.value)
+      // Optionally, redirect the user to login page after successful registration
+      router.push('/login')  
+    } else {
+      toast.error(message.value)
+    }
   } catch (err) {
     message.value = err.response?.data?.message || 'Something went wrong'
     messageType.value = 'error'
+    toast.error(message.value)
   }
 }
 </script>

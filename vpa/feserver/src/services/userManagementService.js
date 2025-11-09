@@ -1,12 +1,26 @@
 import axios from "axios"
+import { useAuthStore } from '@/stores/auth'
+
+
 
 const API_BASE_URL = "http://127.0.0.1:5000/admin/users"
 
-// Helper: get token from localStorage (or Pinia/Vuex store)
-function authHeader() {
-  const token = localStorage.getItem("token")
+
+export function authHeader() {
+  const auth = useAuthStore()
+
+  // Get the token either from the store (preferred)
+  // or from localStorage as fallback
+  let token = auth.token
+
+  // Fallback: if the store is not initialized yet (e.g., on page reload)
+  if (!token && auth.user?.username) {
+    token = localStorage.getItem(`token_${auth.user.username}`)
+  }
+
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
+
 
 export default {
   // Get all users

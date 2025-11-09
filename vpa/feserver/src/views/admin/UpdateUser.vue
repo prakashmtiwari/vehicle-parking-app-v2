@@ -168,6 +168,11 @@ async function handleSubmit() {
     if (form.password) payload.password = form.password
 
     await userService.updateUser(userId, payload)
+    if (!error.value) {
+      toast.success("User details updated successfully")
+    } else {
+      toast.error(error.value)
+    }
     router.push("/users") // go back to user list
   } catch (err) {
     console.error(err)

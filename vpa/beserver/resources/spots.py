@@ -35,36 +35,11 @@ class SpotListResource(Resource):
         return response, 200
 
 
-    @jwt_required()
-    @admin_required
-    def post(self):
-        
-        data = request.get_json()
-        spot = Parking_Spot(
-            status=data["status"],
-            lot_id=data.get("lot_id")
-        )
-        db.session.add(spot)
-        db.session.commit()
-        return {"message": "Spot created", "id": spot.id}, 201
-
-
-class SpotResource(Resource):
-    @jwt_required()
-    @admin_required
-    def put(self, spot_id):
-        spot = Parking_Spot.query.get_or_404(spot_id)
-        data = request.get_json()
-        spot.status = data.get("status", spot.status)
-        spot.lot_id = data.get("lot_id", spot.lot_id)
-
-        db.session.commit()
-        return {"message": "Spot updated"}, 200
-
-    @jwt_required()
-    @admin_required
-    def delete(self, spot_id):
-        spot = Parking_Spot.query.get_or_404(spot_id)
-        db.session.delete(spot)
-        db.session.commit()
-        return {"message": "Spot deleted"}, 200
+# class SpotResource(Resource):
+#     @jwt_required()
+#     @admin_required
+#     def delete(self, spot_id):
+#         spot = Parking_Spot.query.get_or_404(spot_id)
+#         db.session.delete(spot)
+#         db.session.commit()
+#         return {"message": "Spot deleted"}, 200

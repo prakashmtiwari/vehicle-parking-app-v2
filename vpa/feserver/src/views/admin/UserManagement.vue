@@ -6,7 +6,7 @@
 
 
     <div class="card custom-outline p-3">
-      <h3>Users</h3>
+      <h3 style="text-align: center;">Registered Users</h3>
 
       <div v-if="loading" class="py-4 text-center">
         <div class="spinner-border" role="status">
@@ -22,7 +22,7 @@
               <th>Username</th>
               <th>Email</th>
               <th>Name</th>
-              <th>Actions</th>
+              <th>Update User</th>
             </tr>
           </thead>
           <tbody>

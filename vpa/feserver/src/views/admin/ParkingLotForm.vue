@@ -183,7 +183,7 @@ onMounted(async () => {
 async function handleSubmit() {
   loading.value = true
   try {
-    // Validation (optional)
+    // Validation
     if (!form.prime_location_name || !form.price || !form.address || !form.maximum_number_of_spots) {
       toast.error("Please fill all required fields.")
       return
@@ -192,9 +192,11 @@ async function handleSubmit() {
     if (isEdit.value) {
       // Update existing lot
       await parkingLotService.updateLot(route.params.id, form)
+      toast.success("Parking lot updated successfully!!")
     } else {
       // Create new lot
       await parkingLotService.createLot(form)
+      toast.success("Parking lot created successfully!!")
     }
 
     // Navigate back to parking lot list

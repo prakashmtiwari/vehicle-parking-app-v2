@@ -2,10 +2,12 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToast as UseToast } from 'vue-toastification'
 import axios from 'axios'
 
 const router = useRouter()
 const auth = useAuthStore()
+const Toast = UseToast()
 
 const form = reactive({
   username: '',
@@ -33,6 +35,7 @@ const loginUser = async () => {
 
       message.value = res.data.message
       messageType.value = 'success'
+      Toast.success("Login successful!")
 
       // role-based redirect
       if (res.data.user.roles.includes('admin')) {

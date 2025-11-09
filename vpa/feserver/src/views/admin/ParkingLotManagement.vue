@@ -83,15 +83,22 @@
                 <th>Status</th>
                 <th>Vehicle</th>
                 <th>Parking Start Time</th>
-                <!-- <th>Action</th> -->
               </tr>
             </thead>
             <tbody>
               <tr v-for="spot in selectedLotSpots" :key="spot.id">
                 <td>{{ spot.id }}</td>
                 <td>
-                  <span :class="spot.status === 'O' ? 'text-danger' : 'text-success'">
-                    {{ spot.status === 'O' ? 'Occupied' : 'Available' }}
+                  <span :class="spot.status === 'O' ? 'text-warning' : 'text-success'">
+                    {{ 
+                      spot.active_reservation 
+                        ? (
+                           (new Date(spot.active_reservation.parking_timestamp) > new Date() 
+                                  ? 'Booked' 
+                                  : 'Active')
+                          )
+                        : 'Available' 
+                    }}                  
                   </span>
                 </td>
                 <td>
@@ -101,15 +108,7 @@
                 <td>
                   <span v-if="spot.status === 'O'">{{ formatDateTime(spot.active_reservation?.parking_timestamp) || '—' }}</span>
                   <span v-else>-</span>
-                </td>
-                <!-- <td>
-                  <button
-                    v-if="spot.status === 'O'"
-                    class="btn btn-sm btn-secondary"
-                    @click="releaseSpot(spot.id)"
-                  >Free Spot</button>
-                  <span v-else>-</span>
-                </td> -->
+                </td>              
               </tr>
               <tr v-if="selectedLotSpots.length === 0">
                 <td colspan="3" class="text-center">No spots found</td>
@@ -126,7 +125,7 @@
   <div class="modal-dialog custom-outline">
     <div class="modal-content p-3">
       <div class="modal-header">
-        <h5 class="modal-title text-custom">Address for {{ selectedLotName }}</h5>
+        <h5 class="modal-title text-custom">Address for Parking Lot Id - {{ selectedLotName }}</h5>
       </div>
       <div class="modal-body">
         <p>{{ selectedLotAddress }}</p>
@@ -206,6 +205,7 @@
     if (!confirm("Are you sure you want to delete this parking lot?")) return
     try {
       await parkingLotService.deleteLot(id)
+      toast.success("Parking lot deleted successfully.")
       await loadLots()
     } catch (err) {
       console.error(err)
@@ -232,7 +232,7 @@
     const lot = lots.value.find(l => l.id === lotId)
     if (lot) {
       selectedLotAddress.value = lot.address || "No address available"
-      selectedLotName.value = lot.prime_location_name
+      selectedLotName.value = lot.id
       showAddressModal.value = true
     } else {
       error.value = "Lot not found"
@@ -246,12 +246,12 @@ function closeAddressModal() {
 }
 
 
-  function closeSpotsModal() {
-    selectedLotSpots.value = null
-    selectedLotId.value = null
-  }
+function closeSpotsModal() {
+  selectedLotSpots.value = null
+  selectedLotId.value = null
+}
 
-  async function releaseSpot(spotId) {
+async function releaseSpot(spotId) {
   if (!confirm(`Are you sure you want to free spot ${spotId}?`)) return
   try {
     await parkingLotService.releaseSpot(spotId)

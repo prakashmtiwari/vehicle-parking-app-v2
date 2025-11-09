@@ -1,11 +1,25 @@
 import axios from "axios"
+import { useAuthStore } from '@/stores/auth'
+
 
 const API_BASE_URL = "http://localhost:5000/api/reservations" // Main reservations endpoint
 const API_USER_BASE_URL = "http://localhost:5000/api/myreservations" // 
 const API_EXPORT_URL = "http://localhost:5000/api/export-history" // Export history endpoint
 
-function authHeader() {
-  const token = localStorage.getItem("token")
+
+
+export function authHeader() {
+  const auth = useAuthStore()
+
+  // Get the token either from the store (preferred)
+  // or from localStorage as fallback
+  let token = auth.token
+
+  // Fallback: if the store is not initialized yet (e.g., on page reload)
+  if (!token && auth.user?.username) {
+    token = localStorage.getItem(`token_${auth.user.username}`)
+  }
+
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 

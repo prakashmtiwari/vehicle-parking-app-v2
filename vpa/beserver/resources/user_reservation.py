@@ -17,6 +17,7 @@ class UserReservationListResource(Resource):
     def get(self):
    # """Get all reservations of the logged-in user"""
         current_user = User.query.get(int(get_jwt_identity()))
+        print(current_user)
         reservations = Reservation.query.filter_by(user_id=current_user.id).all()
 
         result = []

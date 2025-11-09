@@ -4,6 +4,10 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from vpa.beserver.models import Parking_Lot, Parking_Spot
 from vpa.beserver.extensions import db
 from vpa.beserver.utils.decorators import admin_required
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 
@@ -134,6 +138,17 @@ class ParkingLotResource(Resource):
         for spot in lot.spots:
             if spot.status == "O":
                 return {"message": "All the parking spots are not unoccupied !!!"}, 400
+            
+        # delete all the spots first
+        try: 
+            for spot in lot.spots:
+                spot = Parking_Spot.query.get_or_404(spot.id)
+                db.session.delete(spot)
+                db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logger.error("Error delting parking spots associated with parking lot")
+            return {"message": "Error delting parking spots associated with parking lot", "error": str(e)}, 500
         
         db.session.delete(lot)
         db.session.commit()

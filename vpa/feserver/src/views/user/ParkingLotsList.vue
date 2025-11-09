@@ -26,7 +26,7 @@
             </p>
 
             <p>
-              <strong>Occupied Spots:</strong> {{ lot.spots.filter(s => s.status === 'O').length }} /
+              <strong>Occupied/Reserved Spots:</strong> {{ lot.spots.filter(s => s.status === 'O').length }} /
               {{ lot.maximum_number_of_spots }}
             </p>
 
@@ -146,6 +146,15 @@ async function confirmReservation() {
   creating.value = true
 
   try {
+    //check if the user already has a reservation with an active reservation
+    const user_reservations = await reservationService.getUserReservations()
+    const hasActive = user_reservations.data.some(r => !r.leaving_timestamp && new Date(r.parking_timestamp) <= new Date())
+    if (hasActive) {  
+      toast.error("This vehicle already has an active reservation!")
+      creating.value = false
+      return
+    }
+
     // find next available spot
     const availableSpot = selectedLot.value.spots.find(s => s.status === "A")
     if (!availableSpot) {

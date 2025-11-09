@@ -39,7 +39,12 @@
                   <td>{{ formatDateTime(res.leaving_timestamp) }}</td>
                   <td>
                     <span :class="!res.leaving_timestamp ? 'badge bg-success' : 'badge bg-secondary'">
-                      {{ !res.leaving_timestamp ? "Active" : "Inactive" }}
+                      {{ res.leaving_timestamp
+                       ? "Complete" 
+                       : (new Date(res.parking_timestamp) > new Date()
+                          ? "Booked"
+                          :  "Active"                        
+                        ) }}
                     </span>
                   </td>
                   <td>

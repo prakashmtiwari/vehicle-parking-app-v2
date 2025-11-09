@@ -1,7 +1,7 @@
 # Import resources
 from vpa.beserver.resources.user import UserListResource, UserResource
 from vpa.beserver.resources.parking_lot import ParkingLotListResource, ParkingLotResource
-from vpa.beserver.resources.spots import SpotListResource, SpotResource
+from vpa.beserver.resources.spots import SpotListResource
 from vpa.beserver.resources.admin_reservation import ReservationListResource
 from vpa.beserver.resources.user_reservation import UserReservationListResource, UserReservationResource
 from vpa.beserver.resources.current_user import CurrentUserResource  
@@ -21,7 +21,7 @@ def register_resources(api):
 
     # Parking Spots CRUD
     api.add_resource(SpotListResource, "/api/lots/<int:lot_id>/spots")
-    api.add_resource(SpotResource, "/api/spots/<int:spot_id>")
+    # api.add_resource(SpotResource, "/api/spots/<int:spot_id>")
 
     # Reservations CRUD
     api.add_resource(ReservationListResource, "/api/reservations")
