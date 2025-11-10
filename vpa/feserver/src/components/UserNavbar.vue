@@ -4,61 +4,159 @@ import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
 const current_user_id = auth.user?.id
-
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-md">
-    <div class="navbar-brand">
-      <h2>User Dashboard</h2>
-    </div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="navbar-brand">
+        <svg class="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zm10 0a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zM3 9h18v2H3V9zm4-4h10v2H7V5z"/>
+        </svg>
+        <h2>User Dashboard</h2>
+      </div>
 
-    <ul class="navbar-links">
-      <button class="btn custom-button btn-sm custom-btn"><li><router-link :to="`/user/${current_user_id}`" class="text-black">Home</router-link></li></button>
-      <button class="btn custom-button btn-sm custom-btn"><li><router-link to="/parking-lot-list" class="text-black">Parking Lots</router-link></li></button>
-      <button class="btn custom-button btn-sm custom-btn"><li><router-link to="/user-summary" class="text-black">Summary</router-link></li></button>
-      <li><LogoutButton /></li>
-    </ul>
+      <ul class="navbar-links">
+        <li>
+          <router-link :to="`/user/${current_user_id}`" class="nav-link">Home</router-link>
+        </li>
+        <li>
+          <router-link to="/parking-lot-list" class="nav-link">Parking Lots</router-link>
+        </li>
+        <li>
+          <router-link to="/user-summary" class="nav-link">Summary</router-link>
+        </li>
+        <li class="logout-wrapper">
+          <LogoutButton />
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
 <style scoped>
 .navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, rgba(107, 115, 255, 0.95) 0%, rgba(0, 13, 255, 0.95) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+  max-width: 100%;
+  padding: 0.75rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 1rem 2rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  width: 2rem;
+  height: 2rem;
+  color: white;
 }
 
 .navbar-brand h2 {
   margin: 0;
-  color: rgb(56, 53, 206, 0.74);
-  letter-spacing: -1px;
-  font-weight: bold;  
-  font-family: sans-serif;
-  font-style: italic;
+  color: white;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   margin: 0;
-  padding: 0;
+  padding-left: 500px;
+  align-items: center;
 }
 
-.navbar-links a{
+.navbar-links li {
+  display: inline-block;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  color: white;
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.custom-btn{
-  background: transparent;
-  border: none;
-  color: #ecf0f1;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link.router-link-active {
+  background: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+}
+
+/* Style for LogoutButton to match nav links */
+.logout-wrapper :deep(button),
+.logout-wrapper :deep(a) {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
+  font-family: inherit;
+}
+
+.logout-wrapper :deep(button):hover,
+.logout-wrapper :deep(a):hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .navbar-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .navbar-brand h2 {
+    font-size: 1.25rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
 }
 </style>

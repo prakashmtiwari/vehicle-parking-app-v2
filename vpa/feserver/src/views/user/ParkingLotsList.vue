@@ -229,7 +229,7 @@ onMounted(loadLots)
 }
 
 .card-header{
-  background-color: #5C3E94;
+  background-color: rgb(56, 53, 206);
 }
 
 .container{

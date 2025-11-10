@@ -23,7 +23,7 @@ const handleLogout = () => {
 }
 
 .custom-btn {
-  color: black !important;
+  color: white !important;
   border: none;
   background: transparent;
   padding: 0.5rem 1rem;
