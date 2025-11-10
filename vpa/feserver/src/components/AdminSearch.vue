@@ -120,79 +120,56 @@
 
 
 <script setup>
-import { ref,  watch } from "vue";
-import axios from "axios";
-import { useToast } from "vue-toastification";
+import { ref, watch } from "vue"
+import { useToast } from "vue-toastification"
+import AdminSearchService from "@/services/adminSearchService.js"
 
-const filter = ref("");
-const query = ref("");
-const status = ref("");
-const results = ref([]);
-const searched = ref(false);
-const toast = useToast();
+const filter = ref("")
+const query = ref("")
+const status = ref("")
+const results = ref([])
+const searched = ref(false)
+const toast = useToast()
 
 async function triggerSearch() {
-  if (!filter.value) {
-    toast.warning("Please select a filter type.");
-    return;
-  }
-
   try {
-    const token = localStorage.getItem("token");
-    console.log("TOKEN:", token);
-
-    let API_URL_BASE = `http://localhost:5000`
-    let endpoint = `/search/${filter.value}`;
-    const params = {};
-
-    if (filter.value === "spots") {
-      params.status = status.value;
-      if (!status.value) {
-        toast.warning("Please select a spot status.");
-        return;
-      }
-    } else {
-      params.query = query.value;
-      if (!query.value.trim()) {
-        toast.warning("Please enter a search term.");
-        return;
-      }
+    if (!filter.value) {
+      toast.warning("Please select a filter type.")
+      return
     }
 
-    if (!token) {
-        toast.error("Session expired. Please log in again.");
-        return;
-    }
+    const data = await AdminSearchService.search(
+      filter.value,
+      query.value,
+      status.value
+    )
 
-    const res = await axios.get(`${API_URL_BASE}${endpoint}`, {
-      params,
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    results.value = data
+    searched.value = true
 
-    results.value = res.data;
-    searched.value = true;
-
-    if (res.data.length > 0) {
-      toast.success(`Found ${res.data.length} ${filter.value}.`);
+    if (data.length > 0) {
+      toast.success(`Found ${data.length} ${filter.value}.`)
     } else {
-      toast.info("No results found.");
+      toast.info("No results found.")
     }
   } catch (err) {
-    toast.error("Failed to search. Please try again.");
-    console.error(err);
+    if (err.message.includes("login")) {
+      toast.error("Session expired. Please log in again.")
+    } else {
+      toast.error(err.message || "Failed to search. Please try again.")
+    }
+    console.error("Search Error:", err)
   }
 }
 
 watch(filter, () => {
-  results.value = [];
-  query.value = "";
-  status.value = "";
-  searched.value = false;
-});
-
-
-
+  results.value = []
+  query.value = ""
+  status.value = ""
+  searched.value = false
+})
 </script>
+
 
 <style scoped>
 select, input {
