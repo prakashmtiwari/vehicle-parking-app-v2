@@ -171,7 +171,7 @@ button {
 }
 
 .btn {
-  background-color: rgb(218, 47, 218);
+  background-color: rgb(56, 53, 206, 0.74);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -187,7 +187,7 @@ h2 {
 }
 
 .custom-outline {
-  border: 1px solid rgb(218, 47, 218); 
+  border: 1px solid rgb(56, 53, 206, 0.74); 
   margin-bottom: 20px;
 }
 

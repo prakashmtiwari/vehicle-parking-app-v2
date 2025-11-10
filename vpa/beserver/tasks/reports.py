@@ -127,7 +127,7 @@ REPORT_TEMPLATE = """
     <h2>All Reservations for the month</h2>
     {% if Reservations %}
       <table>
-        <thead><tr><th>Date</th><th>Lot</th><th>Duration</th><th>Amount</th></tr></thead>
+        <thead><tr><th>Date</th><th>Parking Lot</th><th>Parking Duration</th><th>Amount Paid</th></tr></thead>
         <tbody>
         {% for b in Reservations %}
           <tr>
@@ -210,7 +210,7 @@ def build_report_html(user, Reservations, stats, year, month):
     for b in Reservations:
         lot = db.session.query(Parking_Lot).filter(Parking_Lot.id == b.lot_id).first()
         duration = ""
-        
+
         if getattr(b, "parking_timestamp", None) and getattr(b, "leaving_timestamp", None):
             delta = b.leaving_timestamp - b.parking_timestamp
 # Convert timedelta to hours, minutes, seconds

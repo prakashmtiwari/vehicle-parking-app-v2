@@ -210,22 +210,22 @@ onMounted(loadLots)
 }
 
 .custom-text{
-  color: rgb(218, 47, 218);
+  color: rgb(56, 53, 206, 0.74);
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-weight: bold;
   text-align: center;
 }
 
 .custom-outline {
-  border: 1px solid rgb(218, 47, 218); 
+  border: 1px solid rgb(56, 53, 206, 0.74); 
   margin-bottom: 20px;
  
 }
 
 .custom-outline:focus {
   outline: none;
-  border-color: rgb(245, 99, 245); 
-  box-shadow: 0 0 4px rgb(245, 99, 245);
+  border-color: rgb(56, 53, 206, 0.74); 
+  box-shadow: 0 0 4px rgb(56, 53, 206, 0.74);
 }
 
 .card-header{

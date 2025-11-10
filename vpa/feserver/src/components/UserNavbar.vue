@@ -33,7 +33,7 @@ const current_user_id = auth.user?.id
 
 .navbar-brand h2 {
   margin: 0;
-  color: rgb(218, 47, 218);
+  color: rgb(56, 53, 206, 0.74);
   letter-spacing: -1px;
   font-weight: bold;  
   font-family: sans-serif;

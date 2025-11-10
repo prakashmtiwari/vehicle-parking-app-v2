@@ -32,7 +32,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
 
 .navbar-brand h2 {
   margin: 0;
-  color: rgb(218, 47, 218);
+  color: rgb(56, 53, 206, 0.74);
   font-weight: bold;
   letter-spacing: -1px;
   font-family: sans-serif;
