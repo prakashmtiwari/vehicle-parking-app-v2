@@ -10,6 +10,7 @@ def is_admin(user):
 
 class SpotListResource(Resource):
     @jwt_required()
+    @admin_required
     def get(self, lot_id):
         lot = Parking_Lot.query.get_or_404(lot_id)
         spots = lot.spots 

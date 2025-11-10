@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash
 from vpa.beserver.models import User, Role
 from vpa.beserver.extensions import db
 
+
 class CurrentUserResource(Resource):
     @jwt_required()
     def get(self):
@@ -18,6 +19,7 @@ class CurrentUserResource(Resource):
             "last_name": user.last_name,
             "roles": [r.name for r in user.roles],
         }, 200
+
 
     @jwt_required()
     def put(self):

@@ -32,4 +32,4 @@ def register_resources(api):
     api.add_resource(UserReservationHistoryResource, "/api/export-history")
 
     # User Endpoints
-    api.add_resource(CurrentUserResource, "/self")
+    # api.add_resource(CurrentUserResource, "/self")
