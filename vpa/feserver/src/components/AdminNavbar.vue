@@ -79,7 +79,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
   display: flex;
   gap: 1rem;
   margin: 0;
-  padding-left: 400px;
+  padding-left: 370px;
   align-items: center;
 }
 
