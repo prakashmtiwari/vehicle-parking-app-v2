@@ -14,7 +14,7 @@ import AdminParkingHistory from '@/components/adminParkingHistory.vue';
         <!-- Page Header -->
         <div class="page-header">
           <div class="header-content">
-            <h1 class="page-title">Dashboard</h1>
+            <h1 class="page-title">Summary Dashboard</h1>
             <p class="page-subtitle">Monitor parking history and revenue analytics in real-time</p>
           </div>
         </div>
@@ -53,6 +53,7 @@ import AdminParkingHistory from '@/components/adminParkingHistory.vue';
 
 /* Global Styles */
 .dashboard-page {
+  padding-top: 100px;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   background-color: #f8fafc;

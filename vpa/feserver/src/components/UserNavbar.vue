@@ -36,19 +36,22 @@ const current_user_id = auth.user?.id
 
 <style scoped>
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   z-index: 50;
-  backdrop-filter: blur(12px);
-  background: linear-gradient(135deg, rgba(107, 115, 255, 0.95) 0%, rgba(0, 13, 255, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  background: rgba(102, 126, 234, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .nav-container {
-  max-width: 100%;
-  padding: 0.75rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -73,14 +76,15 @@ const current_user_id = auth.user?.id
   font-size: 1.5rem;
   letter-spacing: -0.5px;
   font-family: 'Poppins', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin: 0;
-  padding-left: 500px;
+  padding: 0;
   align-items: center;
 }
 

@@ -159,6 +159,7 @@ onMounted(loadUsers)
 
 /* Global Styles */
 .user-management-page {
+  padding-top: 100px;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   background-color: #f8fafc;

@@ -9,7 +9,7 @@ import LogoutButton from '@/components/LogoutButton.vue'
         <svg class="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zm10 0a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zM3 9h18v2H3V9zm4-4h10v2H7V5z"/>
         </svg>
-        <h2>Admin Dashboard</h2>
+        <h2>ParkApp</h2>
       </div>
 
       <ul class="navbar-links">
@@ -35,19 +35,22 @@ import LogoutButton from '@/components/LogoutButton.vue'
 
 <style scoped>
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   z-index: 50;
-  backdrop-filter: blur(12px);
-  background: linear-gradient(135deg, rgba(107, 115, 255, 0.95) 0%, rgba(0, 13, 255, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  background: rgba(102, 126, 234, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .nav-container {
-  max-width: 100%;
-  padding: 0.75rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -72,14 +75,15 @@ import LogoutButton from '@/components/LogoutButton.vue'
   font-size: 1.5rem;
   letter-spacing: -0.5px;
   font-family: 'Poppins', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin: 0;
-  padding-left: 370px;
+  padding: 0;
   align-items: center;
 }
 

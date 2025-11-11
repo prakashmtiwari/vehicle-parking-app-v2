@@ -12,7 +12,7 @@ import AdminSearch from '@/components/AdminSearch.vue';
       <div class="admin-container">
         <div class="admin-card">
           <div class="card-header">
-            <h2 class="card-title">Welcome to the Dashboard 👋</h2>
+            <h2 class="card-title">Welcome to the Admin Dashboard 👋</h2>
             <p class="card-subtitle">Manage parking lots, spots, and users easily.</p>
           </div>
           
@@ -36,6 +36,7 @@ import AdminSearch from '@/components/AdminSearch.vue';
 
 /* Apply the Poppins font globally within this component */
 .dashboard-page {
+  padding-top: 100px;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   background-color: #f8fafc; /* Lighter background for a cleaner dashboard feel */

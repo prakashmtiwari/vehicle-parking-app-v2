@@ -251,6 +251,7 @@ function cancelForm() {
 }
 
 .form-wrapper {
+  padding-top: 100px;
   max-width: 900px;
   margin: 0 auto;
 }
