@@ -60,6 +60,7 @@ class UserReservationListResource(Resource):
         
         current_user = User.query.get(int(get_jwt_identity()))
         data = request.get_json()
+        print(data)
         parking_timestamp = datetime.strptime(data["parking_timestamp"], "%Y-%m-%dT%H:%M")
         spot = Spot.query.get(data["spot_id"])
         lot_id = spot.lot_id if spot else None  

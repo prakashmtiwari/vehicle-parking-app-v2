@@ -239,7 +239,7 @@ onMounted(loadReservations)
   <div class="charts-component">
     <!-- Header Section -->
     <div class="charts-header">
-      <h2 class="charts-title">My Spending Analytics</h2>
+      <h2 class="charts-title">Reservation and Spending Analytics</h2>
       <p class="charts-subtitle">Visual breakdown of your reservations and spending by parking lot</p>
     </div>
 

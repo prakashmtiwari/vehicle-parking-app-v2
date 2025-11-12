@@ -13,6 +13,11 @@ const current_user_name = authStore.user?.username || 'User'
 const reservations = ref([])
 const loading = ref(true)
 
+// Payment modal state
+const showPaymentModal = ref(false)
+const selectedReservationID = ref(null)
+const parkingCost = ref(0)
+
 // Compute active reservations (parking time has passed, but not yet left)
 const activeReservations = computed(() => {
   return reservations.value.filter(r => {
@@ -69,15 +74,37 @@ async function loadReservations() {
   }
 }
 
-async function releaseSpot(reservationId) {
-  if (confirm('Are you sure you want to release this spot?')) {
+async function cancelReservation(reservationId) {
+  if (confirm("Are you sure you want to cancel this reservation?")) {
     try {
-      await reservationService.completeReservation(reservationId)
-      toast.success('Spot released successfully!')
+      await reservationService.cancelReservation(reservationId)
+      toast.info("Reservation cancelled successfully.")
       loadReservations()
     } catch (err) {
-      toast.error('Failed to release spot')
+      toast.error("Failed to cancel reservation.")
     }
+  }
+}
+
+async function openPaymentModal(reservationId) {
+  try {
+    selectedReservationID.value = reservationId
+    const res = await reservationService.getParkingAmount(reservationId)
+    parkingCost.value = res.data.parking_cost
+    showPaymentModal.value = true
+  } catch (err) {
+    toast.error('Error calculating the amount to be paid')
+  }
+}
+
+async function confirmPayment() {
+  try {
+    await reservationService.completeReservation(selectedReservationID.value)
+    toast.success('Spot released successfully!')
+    showPaymentModal.value = false
+    loadReservations()
+  } catch (err) {
+    toast.error('Failed to release spot')
   }
 }
 
@@ -162,7 +189,7 @@ onMounted(loadReservations)
                   </div>
                 </div>
 
-                <button class="release-button" @click="releaseSpot(reservation.id)">
+                <button class="release-button" @click="openPaymentModal(reservation.id)">
                   <svg class="button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                   </svg>
@@ -182,7 +209,18 @@ onMounted(loadReservations)
 
           <div class="upcoming-grid">
             <div v-for="reservation in upcomingReservations" :key="reservation.id" class="upcoming-card">
-              <div class="upcoming-badge">BOOKED</div>
+              <div class="upcoming-header">
+                <div class="upcoming-badge">BOOKED</div>
+                <button 
+                  class="cancel-button-small" 
+                  @click="cancelReservation(reservation.id)"
+                  title="Cancel Reservation"
+                > 
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
               <div class="upcoming-content">
                 <h4 class="upcoming-location">{{ reservation.spot?.lot?.prime_location_name || 'Parking Lot' }}</h4>
                 <div class="upcoming-details">
@@ -231,6 +269,29 @@ onMounted(loadReservations)
         </div>
       </div>
     </main>
+
+    <!-- Payment Confirmation Modal -->
+    <div v-if="showPaymentModal" class="modal-overlay" @click.self="showPaymentModal = false">
+      <div class="modal-container payment-modal">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title">Confirm Payment</h5>
+          </div>
+          <button type="button" class="btn-close" @click="showPaymentModal = false">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="payment-text">
+            Are you sure you want to release this spot?<br>
+            <span class="payment-label">Payment Amount:</span> 
+            <strong class="payment-amount">₹{{ parkingCost?.toFixed(2) || '0.00' }}</strong>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" @click="showPaymentModal = false">Cancel</button>
+          <button class="btn-confirm" @click="confirmPayment()">Confirm & Pay</button>
+        </div>
+      </div>
+    </div>
 
     <UserFooter />
   </div>
@@ -584,6 +645,13 @@ onMounted(loadReservations)
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.upcoming-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .upcoming-badge {
   display: inline-block;
   background: #dbeafe;
@@ -593,7 +661,31 @@ onMounted(loadReservations)
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  margin-bottom: 0.75rem;
+}
+
+.cancel-button-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.cancel-button-small:hover {
+  background: #fde68a;
+  transform: scale(1.05);
+}
+
+.cancel-button-small svg {
+  width: 1rem;
+  height: 1rem;
+  color: #92400e;
 }
 
 .upcoming-content {
@@ -704,6 +796,132 @@ onMounted(loadReservations)
   line-height: 1.6;
 }
 
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn-secondary {
+  padding: 0.5rem 1.25rem;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-confirm {
+  padding: 0.5rem 1.25rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Payment Modal Content */
+.payment-text {
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.payment-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.payment-amount {
+  color: #059669;
+  font-size: 1.25rem;
+}
+
 /* Responsive */
 @media (max-width: 968px) {
   .content {
@@ -762,6 +980,10 @@ onMounted(loadReservations)
 
   .details-grid {
     grid-template-columns: 1fr;
+  }
+
+  .modal-container {
+    max-width: 95%;
   }
 }
 </style>

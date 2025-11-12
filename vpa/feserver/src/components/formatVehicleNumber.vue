@@ -1,7 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const vehicleNumber = ref('')
+const props = defineProps({
+  modelValue: String
+})
+
+const emit = defineEmits(['update:modelValue'])
+
 const displayValue = ref('')
 
 // Format vehicle number with hyphens
@@ -29,7 +34,10 @@ function handleInput(event) {
   const value = event.target.value
   const formatted = formatVehicleNumber(value)
   displayValue.value = formatted
-  vehicleNumber.value = formatted.replace(/-/g, '') // Store without hyphens
+  
+  // Store without hyphens and emit to parent
+  const cleanValue = formatted.replace(/-/g, '')
+  emit('update:modelValue', cleanValue)
   
   // Update the input field
   event.target.value = formatted
@@ -40,9 +48,22 @@ function handlePaste(event) {
   const pastedText = event.clipboardData.getData('text')
   const formatted = formatVehicleNumber(pastedText)
   displayValue.value = formatted
-  vehicleNumber.value = formatted.replace(/-/g, '')
+  
+  // Store without hyphens and emit to parent
+  const cleanValue = formatted.replace(/-/g, '')
+  emit('update:modelValue', cleanValue)
+  
   event.target.value = formatted
 }
+
+// Watch for external changes to modelValue (like when modal opens)
+watch(() => props.modelValue, (newValue) => {
+  if (newValue) {
+    displayValue.value = formatVehicleNumber(newValue)
+  } else {
+    displayValue.value = ''
+  }
+}, { immediate: true })
 </script>
 
 <template>

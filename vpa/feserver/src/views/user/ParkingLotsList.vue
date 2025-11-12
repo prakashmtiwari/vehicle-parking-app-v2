@@ -37,8 +37,18 @@
                   <span class="info-label">Occupied:</span>
                   <span class="info-value">{{ lot.spots.filter(s => s.status === 'O').length }} / {{ lot.maximum_number_of_spots }}</span>
                 </div>
+                <div class="info-item">
+                  <span class="info-label">Address:</span>
+                  <button
+                    class="btn-address"
+                    @click="viewAddress(lot)"
+                    title="View Address"
+                  >
+                    View Address
+                  </button>
+                </div>
               </div>
-
+              
               <div class="availability-badge" :class="hasAvailableSpot(lot) ? 'available' : 'unavailable'">
                 <span class="badge-dot"></span>
                 {{ hasAvailableSpot(lot) ? 'Spots Available' : 'Fully Booked' }}
@@ -72,6 +82,27 @@
       </div>
     </main>
 
+    <!-- Address Modal -->
+    <div v-if="showAddressModal" class="modal-overlay" @click.self="closeAddressModal">
+      <div class="modal-container modal-small">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title">Parking Lot Address</h5>
+            <p class="modal-subtitle">{{ selectedLotName }}</p>
+          </div>
+          <button type="button" class="close-btn" @click="closeAddressModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="address-content">
+            <p>{{ selectedLotAddress }}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" @click="closeAddressModal">Close</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Reservation Modal -->
     <div v-if="showReservationModal" class="modal-overlay" @click="closeReservationModal">
       <div class="modal-container" @click.stop>
@@ -94,16 +125,6 @@
           </div>
 
           <form @submit.prevent="confirmReservation" class="reservation-form">
-            <!-- <div class="form-group">
-              <label class="form-label">Vehicle Number</label>
-              <input
-                type="text"
-                v-model="vehicleNumber"
-                class="form-input"
-                placeholder="e.g., DL01AB1234"
-                required
-              />
-            </div> -->
             <FormatVehicleNumber v-model="vehicleNumber" />
 
             <div class="form-group">
@@ -152,11 +173,17 @@ const lots = ref([])
 const loading = ref(false)
 const error = ref("")
 
+// Reservation Modal
 const showReservationModal = ref(false)
 const selectedLot = ref(null)
 const vehicleNumber = ref("")
 const reservationTime = ref("")
 const creating = ref(false)
+
+// Address Modal
+const showAddressModal = ref(false)
+const selectedLotName = ref("")
+const selectedLotAddress = ref("")
 
 async function loadLots() {
   loading.value = true
@@ -175,6 +202,18 @@ function hasAvailableSpot(lot) {
   return lot.spots.some(s => s.status === "A")
 }
 
+function viewAddress(lot) {
+  selectedLotName.value = lot.prime_location_name
+  selectedLotAddress.value = lot.address
+  showAddressModal.value = true
+}
+
+function closeAddressModal() {
+  showAddressModal.value = false
+  selectedLotName.value = ""
+  selectedLotAddress.value = ""
+}
+
 function openReservationModal(lot) {
   selectedLot.value = lot
   vehicleNumber.value = ""
@@ -187,15 +226,33 @@ function openReservationModal(lot) {
 function closeReservationModal() {
   showReservationModal.value = false
   selectedLot.value = null
+  vehicleNumber.value = ""
+  reservationTime.value = ""
 }
 
 async function confirmReservation() {
   if (!selectedLot.value) return
+  
+  // Trim and validate vehicle number
+  const trimmedVehicleNumber = vehicleNumber.value?.trim()
+  
+  if (!trimmedVehicleNumber) {
+    toast.error("Please enter a valid vehicle number!")
+    return
+  }
+  
+  console.log('Vehicle Number:', trimmedVehicleNumber)
+  
   creating.value = true
 
   try {
     const user_reservations = await reservationService.getUserReservations()
-    const hasActive = user_reservations.data.some(r => !r.leaving_timestamp && new Date(r.parking_timestamp) <= new Date() && r.vehicle_number === vehicleNumber.value)
+    const hasActive = user_reservations.data.some(r => 
+      !r.leaving_timestamp && 
+      new Date(r.parking_timestamp) <= new Date() && 
+      r.vehicle_number === trimmedVehicleNumber
+    )
+    
     if (hasActive) {  
       toast.error("This vehicle already has an active reservation!")
       creating.value = false
@@ -205,14 +262,17 @@ async function confirmReservation() {
     const availableSpot = selectedLot.value.spots.find(s => s.status === "A")
     if (!availableSpot) {
       toast.info("No available spots!")
+      creating.value = false
       return
     }
     
     const payload = {
       spot_id: availableSpot.id,
-      vehicle_number: vehicleNumber.value,
+      vehicle_number: trimmedVehicleNumber,
       parking_timestamp: reservationTime.value
     }
+    
+    console.log('Payload being sent:', payload)
 
     await reservationService.createReservation(payload)
     toast.success("Reservation successful!")
@@ -366,6 +426,25 @@ onMounted(loadLots)
   font-weight: 600;
 }
 
+.btn-address {
+  padding: 0.4rem 0.875rem;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-address:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
 .availability-badge {
   display: inline-flex;
   align-items: center;
@@ -489,6 +568,10 @@ onMounted(loadLots)
   animation: modalSlideIn 0.3s ease-out;
 }
 
+.modal-container.modal-small {
+  max-width: 450px;
+}
+
 @keyframes modalSlideIn {
   from {
     opacity: 0;
@@ -515,6 +598,12 @@ onMounted(loadLots)
   margin: 0;
 }
 
+.modal-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+}
+
 .close-btn {
   width: 2rem;
   height: 2rem;
@@ -527,6 +616,7 @@ onMounted(loadLots)
   cursor: pointer;
   border-radius: 0.375rem;
   transition: all 0.2s ease;
+  font-size: 1.5rem;
 }
 
 .close-btn:hover {
@@ -541,6 +631,23 @@ onMounted(loadLots)
 
 .modal-body {
   padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.address-content {
+  color: #475569;
+  line-height: 1.6;
+}
+
+.address-content p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .location-badge {

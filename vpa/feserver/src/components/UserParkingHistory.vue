@@ -118,10 +118,10 @@ onMounted(() => {
     <main class="content container my-5">
       
       <!-- Header Section -->
-      <div class="history-header">
+      <!-- <div class="history-header">
         <h2 class="history-title">My Parking History</h2>
         <p class="history-subtitle">Complete record of your parking reservations and transactions</p>
-      </div>
+      </div> -->
 
       <!-- Export Button aligned to the right -->
       <div class="mb-3 text-end"> 

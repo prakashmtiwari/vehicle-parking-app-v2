@@ -127,11 +127,12 @@ REPORT_TEMPLATE = """
     <h2>All Reservations for the month</h2>
     {% if Reservations %}
       <table>
-        <thead><tr><th>Date</th><th>Parking Lot</th><th>Parking Duration</th><th>Amount Paid</th></tr></thead>
+        <thead><tr><th>Date</th><th>Vehicle Number</th><th>Parking Lot</th><th>Parking Duration</th><th>Amount Paid</th></tr></thead>
         <tbody>
         {% for b in Reservations %}
           <tr>
             <td>{{ b.created_on.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td>{{ b.vehicle_number }}</td>
             <td>{{ b.lot_name }}</td>
             <td>{{ b.duration }}</td>
             <td>₹{{ "%.2f"|format(b.amount_paid) }}</td>
@@ -224,6 +225,7 @@ def build_report_html(user, Reservations, stats, year, month):
 
         enriched.append({
             "created_on": b.parking_timestamp,
+            "vehicle_number": b.vehicle_number,
             "lot_name": lot.prime_location_name if lot else "Unknown",
             "duration": duration if duration else "—",
             "amount_paid": float(getattr(b, "amount_paid", 0)) if getattr(b, "amount_paid", None) is not None else 0.0  
