@@ -13,7 +13,7 @@ const current_user_id = auth.user?.id
         <svg class="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zm10 0a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4a2 2 0 012-2h2a2 2 0 012 2v4zM3 9h18v2H3V9zm4-4h10v2H7V5z"/>
         </svg>
-        <h2>User Dashboard</h2>
+        <h2>ParkApp</h2>
       </div>
 
       <ul class="navbar-links">
