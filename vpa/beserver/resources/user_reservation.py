@@ -7,6 +7,7 @@ from datetime import datetime
 from vpa.beserver.utils.decorators import user_required
 from vpa.beserver.utils.parking_cost_calculator import parking_cost, compute_parking_cost
 from vpa.beserver.utils.cache_manager import cached_response, clear_cache
+from vpa.beserver.utils.format_vehicle_number import format_vehicle_number
 
     
 
@@ -33,7 +34,7 @@ class UserReservationListResource(Resource):
 
             res_data = {
                 "id": r.id,
-                "vehicle_number": r.vehicle_number,
+                "vehicle_number": format_vehicle_number(r.vehicle_number) if r.vehicle_number else "Unknown",
                 "parking_timestamp": r.parking_timestamp.isoformat() if r.parking_timestamp else None,
                 "leaving_timestamp": r.leaving_timestamp.isoformat() if r.leaving_timestamp else None,
                 "amount_paid": r.amount_paid,

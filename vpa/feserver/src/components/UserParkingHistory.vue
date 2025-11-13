@@ -162,7 +162,7 @@ onMounted(() => {
               <tr v-for="res in reservations" :key="res.id">
                 <td><span class="id-badge">{{ res.id }}</span></td>
                 <td class="location-cell">{{ res.spot?.lot?.prime_location_name || '—' }}</td>
-                <td class="vehicle-cell">{{ formatVehicleNumber(res.vehicle_number) }}</td>
+                <td class="vehicle-cell">{{ (res.vehicle_number) }}</td>
                 <td class="time-cell">{{ formatDateTime(res.parking_timestamp) }}</td>
                 <td class="time-cell">{{ formatDateTime(res.leaving_timestamp) || '—' }}</td>
                 <td>

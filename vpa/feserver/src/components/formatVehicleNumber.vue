@@ -9,26 +9,48 @@ const emit = defineEmits(['update:modelValue'])
 
 const displayValue = ref('')
 
-// Format vehicle number with hyphens
+
 function formatVehicleNumber(value) {
-  // Remove all non-alphanumeric characters
+  // Remove all non-alphanumeric characters and convert to uppercase
   const cleaned = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
   
-  // Apply formatting: XX-XX-XX-XXXX or XX-XX-XXXX
-  let formatted = ''
+  if (cleaned.length < 5) {
+    // Not enough characters for a valid vehicle number
+    return cleaned
+  }
   
-  if (cleaned.length <= 2) {
-    formatted = cleaned
-  } else if (cleaned.length <= 4) {
-    formatted = `${cleaned.slice(0, 2)}-${cleaned.slice(2)}`
-  } else if (cleaned.length <= 6) {
-    formatted = `${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4)}`
+  // Extract parts
+  const part1 = cleaned.slice(0, 2)  // First 2 letters (state code)
+  const part2 = cleaned.slice(2, 4)  // Next 2 digits (district code)
+  
+  // Find where letters end and numbers begin after position 4
+  const remaining = cleaned.slice(4)
+  
+  // Split remaining into letters (part3) and numbers (part4)
+  let part3 = ''
+  let part4 = ''
+  
+  for (const char of remaining) {
+    if (/[A-Z]/i.test(char) && !part4) {  // Still in letter series
+      part3 += char
+    } else {  // Numbers part
+      part4 += char
+    }
+  }
+  
+  // Format with hyphens
+  let formatted = ''
+  if (part3 && part4) {
+    formatted = `${part1}-${part2}-${part3}-${part4}`
+  } else if (part3) {
+    formatted = `${part1}-${part2}-${part3}`
   } else {
-    formatted = `${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 10)}`
+    formatted = `${part1}-${part2}`
   }
   
   return formatted
 }
+
 
 function handleInput(event) {
   const value = event.target.value

@@ -6,6 +6,7 @@ from vpa.beserver.extensions import db
 from datetime import datetime
 from vpa.beserver.utils.decorators import admin_required
 from vpa.beserver.utils.cache_manager import cached_response, clear_cache
+from vpa.beserver.utils.format_vehicle_number import format_vehicle_number
 
 
 class ReservationListResource(Resource):
@@ -34,7 +35,7 @@ class ReservationListResource(Resource):
                 "price": r.spot.lot.price if r.spot and r.spot.lot else "N/A",
                 "duration": duration_str,
                 "spot_id": r.spot_id,
-                "vehicle_number": r.vehicle_number or "—",
+                "vehicle_number": format_vehicle_number(r.vehicle_number) if r.vehicle_number else "—",
                 "user_name": r.user.username if r.user else f"User #{r.user_id}",
                 "parking_timestamp": r.parking_timestamp.isoformat() if r.parking_timestamp else None,
                 "leaving_timestamp": r.leaving_timestamp.isoformat() if r.leaving_timestamp else None,

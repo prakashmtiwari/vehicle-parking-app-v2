@@ -10,6 +10,7 @@ from vpa.beserver.models import Reservation, Parking_Lot, User  # adjust imports
 from vpa.beserver.extensions import db
 from vpa.beserver.utils.send_alerts import send_gmail_message
 from vpa.beserver.app import app    
+from vpa.beserver.utils.format_vehicle_number import format_vehicle_number
 
 
 logger = logging.getLogger(__name__)
@@ -211,7 +212,7 @@ def build_report_html(user, Reservations, stats, year, month):
     for b in Reservations:
         lot = db.session.query(Parking_Lot).filter(Parking_Lot.id == b.lot_id).first()
         duration = ""
-
+#   Calculate duration
         if getattr(b, "parking_timestamp", None) and getattr(b, "leaving_timestamp", None):
             delta = b.leaving_timestamp - b.parking_timestamp
 # Convert timedelta to hours, minutes, seconds
@@ -223,9 +224,12 @@ def build_report_html(user, Reservations, stats, year, month):
             duration = f"{hours} hours {minutes} minutes {seconds} seconds"
             logger.info(f"Computed duration for reservation {b.id}: {duration}")
 
+#format the vehicle number with hyphens
+        vehicle_number = format_vehicle_number(b.vehicle_number) if b.vehicle_number else "Unknown"
+
         enriched.append({
             "created_on": b.parking_timestamp,
-            "vehicle_number": b.vehicle_number,
+            "vehicle_number": vehicle_number,
             "lot_name": lot.prime_location_name if lot else "Unknown",
             "duration": duration if duration else "—",
             "amount_paid": float(getattr(b, "amount_paid", 0)) if getattr(b, "amount_paid", None) is not None else 0.0  
