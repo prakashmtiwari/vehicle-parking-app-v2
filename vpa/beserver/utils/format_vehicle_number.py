@@ -52,14 +52,14 @@ def format_vehicle_number(value):
     return formatted
 
 
-# Example usage:
-examples = [
-    "GA06B3515",      # -> GA-06-B-3515
-    "GA06AB3515",     # -> GA-06-AB-3515
-    "DL01CAF1234",    # -> DL-01-CAF-1234 (wait, this would be 3 letters)
-    "MH12DE1234",     # -> MH-12-DE-1234
-]
+# # Example usage:
+# examples = [
+#     "GA06B3515",      # -> GA-06-B-3515
+#     "GA06AB3515",     # -> GA-06-AB-3515
+#     "DL01CAF1234",    # -> DL-01-CAF-1234 (wait, this would be 3 letters)
+#     "MH12DE1234",     # -> MH-12-DE-1234
+# ]
 
-for vehicle_number in examples:
-    formatted = format_vehicle_number(vehicle_number)
-    print(f"{vehicle_number:15} -> {formatted}")
+# for vehicle_number in examples:
+#     formatted = format_vehicle_number(vehicle_number)
+#     print(f"{vehicle_number:15} -> {formatted}")
