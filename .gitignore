@@ -37,3 +37,6 @@ migrations/
 #frontend
 package.json
 vpa/feserver/package.json
+
+#celery files
+celery*
