@@ -13,6 +13,7 @@ class BaseConfig:
 #    )
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////home/user/22f1000252/vehicle-parking-app-v2/vpa/backend/instance/vehicle-parking.sqlite3'
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "instance", "vehicle-parking.sqlite3") 
+    print (f"Using database URI: {SQLALCHEMY_DATABASE_URI}")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Flask-Security-Too
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT", "change-me-salt")
