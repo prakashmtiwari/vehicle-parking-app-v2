@@ -1,143 +1,186 @@
-Project Setup
+# VPA System
 
-Backend
-##Commands to set up database migrate it.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Flask](https://img.shields.io/badge/Backend-Flask-black)
+![Vue.js](https://img.shields.io/badge/Frontend-Vue.js-42b883)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791)
+![Celery](https://img.shields.io/badge/Async-Celery-green)
+![License](https://img.shields.io/badge/License-Private-red)
 
-# Initialize migrations (first time only). Go to the folder ./vpa/beserver and run
+---
+
+## 📌 Overview
+
+VPA is a full-stack system built with:
+
+- **Flask backend (REST APIs)**
+- **Vue.js frontend**
+- **PostgreSQL database**
+- **Celery workers for background jobs**
+- **Postfix (Gmail SMTP relay) for email delivery**
+
+---
+
+## 🧠 System Architecture
+
+```mermaid
+flowchart LR
+
+U[User Browser] --> FE[Vue.js Frontend]
+
+FE --> BE[Flask Backend API]
+
+BE --> DB[(PostgreSQL Database)]
+
+BE --> CEL[Celery Worker]
+
+CEL --> CELB[Celery Beat Scheduler]
+
+BE --> MAIL[Postfix SMTP Relay]
+
+MAIL --> GMAIL[Gmail SMTP Server]
+
+CEL --> DB
+
+
+⚙️ Backend Setup (Flask + PostgreSQL)
+
+📦 Requirements
+Python 3.11.11
+PostgreSQL running
+Virtual environment recommended
+
+
+🗄️ Database Setup (PostgreSQL)
+
+sudo -u postgres psql
+CREATE DATABASE vpa_db;
+CREATE USER vpa_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE vpa_db TO vpa_user;
+
+Set environment variable:
+DATABASE_URL=postgresql://vpa_user:your_password@localhost:5432/vpa_db
+
+
+🧱 Database Migrations
+
+cd vpa/beserver
+
+Initialize migrations
+
 flask db init
-
-# Generate migrations when models change
+Create migration
 flask db migrate -m "initial tables"
 
-# Apply migrations
+Apply migration
+
 flask db upgrade
 
-# Seed the database with admin role and admin user with superuser priviledges. Run from vpa/beserver
+
+🌱 Seed Database
+
 flask seed
 
-# default username and password for admin is "admin"
- 
+Default admin credentials:
 
-#Run the backend server
-# Create virtual environment with python 3.11.11
+Username: admin
+Password: admin
+
+🚀 Run Backend
+
 python3.11 -m venv venv
-
-# Activate the venv
 source venv/bin/activate
-
 python setup.py develop
+cd vpa/backend
+flask run
 
-# Go to vpa/backend
-flask run      ||    python app.py
+OR
+
+python app.py
 
 
-# Frontend 
-node
-v22.19.0
-# install vue js
-npm create vue@latest
+🎨 Frontend Setup (Vue.js)
 
+📦 Node Version
+Node.js v22.19.0
+
+🧩 Install & Run
 cd vpa/feserver
 npm install
 npm run dev
-
-
-# For production
+🏗️ Production Build
 npm run build
 
 
+⚙️ Celery Setup
 
-# Start Celery worker 
+▶️ Start Worker
 celery -A vpa.beserver.scheduler.celery_runner worker --loglevel=info
 
-# Start Celery beat (for scheduled tasks)
+⏱️ Start Scheduler
 celery -A vpa.beserver.scheduler.celery_runner beat --loglevel=info
 
-
-
-# Setup postfix for sending email
+📧 Email System (Postfix + Gmail SMTP)
+📦 Install Postfix
 sudo apt update
 sudo apt install postfix mailutils -y
 
-During installation:
+Select:
 
-Choose "Internet Site"
+Internet Site
+Mail name: your domain (e.g. example.com)
+🔐 Gmail App Password Setup
+Enable 2FA: https://myaccount.google.com/security
 
-Set your server’s mail name (e.g. example.com)
+Create App Password: https://myaccount.google.com/apppasswords
 
-
-🔑  Enable App Password in Gmail
-Go to Google Account Security
-https://myaccount.google.com/security
-
-Enable 2-Step Verification
-
-https://myaccount.google.com/apppasswords
-Under App passwords, choose:
-
-App: Mail
-Device: Other (Custom name) → e.g., “Postfix server”
-
-Copy the 16-character password 
-
-
-
-✍️  Configure Postfix to use Gmail as a relay
-
+⚙️ Configure Postfix
 sudo nano /etc/postfix/main.cf
 
-Add (or update) the following lines at the bottom:
+Add:
 
-# Use Gmail SMTP relay
 relayhost = [smtp.gmail.com]:587
 
-# Enable SASL authentication
 smtp_sasl_auth_enable = yes
 smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 smtp_sasl_security_options = noanonymous
 smtp_sasl_tls_security_options = noanonymous
 
-# Use STARTTLS encryption
 smtp_use_tls = yes
 smtp_tls_security_level = encrypt
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 
-# (Optional) Always use TLS
-smtp_tls_loglevel = 1
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-
-
-🔐  Create the SASL password file
-
+🔑 Credentials
 sudo nano /etc/postfix/sasl_passwd
-
-Add your Gmail credentials (use your full Gmail address):
-
 [smtp.gmail.com]:587 your_email@gmail.com:your_app_password
 
-
-
-🔒  Secure and hash the credentials
-
+🔒 Secure Setup
 sudo chmod 600 /etc/postfix/sasl_passwd
 sudo postmap /etc/postfix/sasl_passwd
-
-This creates /etc/postfix/sasl_passwd.db, which Postfix will actually use.
-
-
-🔄 Restart Postfix
 sudo systemctl restart postfix
 sudo systemctl enable postfix
 
-
-🧪 Test sending email
-echo "This is a test email body" | mail -s "Test Email" you@example.com
-
-#Check logs 
+🧪 Test Email
+echo "Test email body" | mail -s "Test Email" you@example.com
+📜 Logs
 sudo tail -f /var/log/mail.log
 
+📊 Scheduled Reports
 
 
+🧾 Project Structure
+vpa/
+├── beserver/        # Flask backend
+├── backend/         # API entrypoint
+├── feserver/        # Vue frontend
+├── scheduler/       # Celery tasks
+└── instance/        # Local configs (Postgres setup)
 
 
-#For sending the monthly report of previous month change in vpa/beserver/tasks/reports.py  line number 255 uncomment and comment 256
+🚀 Key Features
+Role-based authentication
+PostgreSQL persistence layer
+Background task processing (Celery)
+Scheduled reporting system
+Email notifications via SMTP relay
+Vue.js SPA frontend
