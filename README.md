@@ -1,7 +1,7 @@
 Project Setup
 
 Backend
-## Commands to set up database migrate it.
+##Commands to set up database migrate it.
 
 # Initialize migrations (first time only). Go to the folder ./vpa/baserver and run
 flask db init
