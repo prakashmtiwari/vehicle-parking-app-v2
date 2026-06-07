@@ -3,16 +3,16 @@ Project Setup
 Backend
 ##Commands to set up database migrate it.
 
-#Initialize migrations (first time only). Go to the folder ./vpa/baserver and run
+# Initialize migrations (first time only). Go to the folder ./vpa/beserver and run
 flask db init
 
-#Generate migrations when models change
+# Generate migrations when models change
 flask db migrate -m "initial tables"
 
-#Apply migrations
+# Apply migrations
 flask db upgrade
 
-#Seed the database with admin role and admin user with superuser priviledges. Run from vpa/beserver
+# Seed the database with admin role and admin user with superuser priviledges. Run from vpa/beserver
 flask seed
 
 # default username and password for admin is "admin"
@@ -31,10 +31,10 @@ python setup.py develop
 flask run      ||    python app.py
 
 
-#Frontend 
+# Frontend 
 node
 v22.19.0
-#install vue js
+# install vue js
 npm create vue@latest
 
 cd vpa/feserver
