@@ -8,12 +8,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConfig:
     SECRET_KEY = os.environ.get("SECRET_KEY", "super-secret-change-me")
-#    SQLALCHEMY_DATABASE_URI = os.environ.get(
-#        "SQLALCHEMY_DATABASE_URI", f"sqlite:///{os.path.join(basedir, '..', '..', 'instance', 'vehicle-parking.sqlite3')}"
-#    )
-#    SQLALCHEMY_DATABASE_URI = 'sqlite:////home/user/22f1000252/vehicle-parking-app-v2/vpa/backend/instance/vehicle-parking.sqlite3'
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "instance", "vehicle-parking.sqlite3") 
-    print (f"Using database URI: {SQLALCHEMY_DATABASE_URI}")
+    # PostgreSQL database configuration
+    DB_USER = os.environ.get("DB_USER", "postgres")
+    DB_PASSWORD = os.environ.get("DB_PASSWORD", "123456")
+    DB_HOST = os.environ.get("DB_HOST", "localhost")
+    DB_PORT = os.environ.get("DB_PORT", "5432")
+    DB_NAME = os.environ.get("DB_NAME", "parking-db")
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    print(f"Using database URI: {SQLALCHEMY_DATABASE_URI}")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Flask-Security-Too
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT", "change-me-salt")
