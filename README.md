@@ -3,7 +3,7 @@ Project Setup
 Backend
 ##Commands to set up database migrate it.
 
-# Initialize migrations (first time only). Go to the folder ./vpa/baserver and run
+# Initialize migrations (first time only). Go to the folder ./vpa/beserver and run
 flask db init
 
 # Generate migrations when models change
