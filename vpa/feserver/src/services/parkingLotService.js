@@ -1,8 +1,8 @@
 import axios from "axios"
 import { useAuthStore } from '@/stores/auth'
+import { API_HOST } from './apiConfig'
 
-
-const API_URL = "http://127.0.0.1:5000/api/lots"
+const API_URL = `${API_HOST}/api/lots`
 
 
 export function authHeader() {
@@ -50,7 +50,7 @@ export default {
 
   async releaseSpot(spotId) {
     return axios.post(
-      `${API_BASE_URL}/spots/${spotId}/release`,
+      `${API_URL}/spots/${spotId}/release`,
       {},
       { headers: authHeader() }
     )

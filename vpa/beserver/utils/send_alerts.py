@@ -1,10 +1,10 @@
-import os
 import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import dotenv
 import logging
+from vpa.beserver.config import BaseConfig
 
 dotenv.load_dotenv()  # Load .env file if present   
 
@@ -41,9 +41,9 @@ def send_gmail_message(to_email: str, subject: str, body: str) -> bool:
     """
     Send an email using the local Postfix server (which relays via Gmail).
     """
-    from_email = os.getenv("FROM_EMAIL_ADDRESS", "noreply@example.com")
-    smtp_server = os.getenv("SMTP_SERVER", "localhost")
-    smtp_port = int(os.getenv("SMTP_PORT", 25))  # Postfix listens on 25 (local relay)
+    from_email = BaseConfig.MAIL_DEFAULT_SENDER
+    smtp_server = BaseConfig.MAIL_SERVER
+    smtp_port = BaseConfig.MAIL_PORT  # Postfix listens on 25 (local relay)
 
     if not to_email:
         logger.warning("⚠️ No recipient email provided.")

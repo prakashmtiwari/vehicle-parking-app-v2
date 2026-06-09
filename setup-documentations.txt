@@ -12,3 +12,17 @@ docker compose config
 docker compose up --watch
 
 docker compose up --watch --build --force-recreate
+
+
+
+Kubernetes
+
+push the docker images created above to docker hub
+
+use the reference in deployment configuration.
+
+
+For service of type nodeport in kind or minikube
+kubectl port-forward svc/frontend-service 8080:80
+
+

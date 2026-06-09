@@ -1,10 +1,10 @@
 import axios from "axios"
 import { useAuthStore } from '@/stores/auth'
+import { API_HOST } from './apiConfig'
 
-
-const API_BASE_URL = "http://localhost:5000/api/reservations" // Main reservations endpoint
-const API_USER_BASE_URL = "http://localhost:5000/api/myreservations" // 
-const API_EXPORT_URL = "http://localhost:5000/api/export-history" // Export history endpoint
+const API_BASE_URL = `${API_HOST}/api/reservations` // Main reservations endpoint
+const API_USER_BASE_URL = `${API_HOST}/api/myreservations` // 
+const API_EXPORT_URL = `${API_HOST}/api/export-history` // Export history endpoint
 
 
 

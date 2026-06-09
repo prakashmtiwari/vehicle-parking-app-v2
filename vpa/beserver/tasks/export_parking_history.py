@@ -3,10 +3,11 @@ from datetime import datetime
 from vpa.beserver.scheduler.init_celery import celery
 from vpa.beserver.extensions import db
 from vpa.beserver.models import Reservation, User
+from vpa.beserver.config import BaseConfig
 from vpa.beserver.utils.send_alerts import send_gmail_message  #  Mailersend email function
 
 
-EXPORT_DIR = os.getenv("EXPORT_DIR", "exports")
+EXPORT_DIR = BaseConfig.EXPORT_DIR
 os.makedirs(EXPORT_DIR, exist_ok=True)
 
 
@@ -24,7 +25,7 @@ def export_parking_history(self, user_id):
     file_name = f"parking_export_{user.username}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     file_path = os.path.join(EXPORT_DIR, file_name)
     
-    download_url = f"http://localhost:5000/exports/{file_name}"
+    download_url = f"{BaseConfig.EXPORT_DOWNLOAD_BASE_URL}/exports/{file_name}"
 
     with open(file_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)

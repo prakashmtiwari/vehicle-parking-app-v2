@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToast as UseToast } from 'vue-toastification'
 import axios from 'axios'
+import { API_HOST } from '@/services/apiConfig'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -27,7 +28,7 @@ const loginUser = async () => {
   }
 
   try {
-    const res = await axios.post('http://127.0.0.1:5000/auth/login', form)
+    const res = await axios.post(`${API_HOST}/auth/login`, form)
 
     if (res.data.success) {
       auth.login(res.data.access_token, res.data.user)

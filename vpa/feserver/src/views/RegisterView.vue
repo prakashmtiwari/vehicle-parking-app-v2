@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
+import { API_HOST } from '@/services/apiConfig'
 
 const toast = useToast()
 const router = useRouter()
@@ -47,7 +48,7 @@ const registerUser = async () => {
   }
 
   try {
-    const res = await axios.post('http://127.0.0.1:5000/auth/register', form)
+    const res = await axios.post(`${API_HOST}/auth/register`, form)
     message.value = res.data.message
     messageType.value = res.data.success ? 'success' : 'error'
     if (res.data.success) {

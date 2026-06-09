@@ -1,7 +1,8 @@
 import axios from "axios"
 import { useAuthStore } from "@/stores/auth"
+import { API_HOST } from "./apiConfig"
 
-const API_BASE_URL = "http://localhost:5000"
+const API_BASE_URL = `${API_HOST}`
 
 export function authHeader() {
   const auth = useAuthStore()

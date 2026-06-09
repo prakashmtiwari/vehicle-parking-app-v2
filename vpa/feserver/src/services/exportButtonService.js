@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useAuthStore } from '@/stores/auth'
+import { API_HOST } from './apiConfig'
 
-
-const API_EXPORT_URL = "http://localhost:5000/api/export-history" // Export history endpoint
-const API_STATUS_URL = "http://localhost:5000/api/export-status" // Export status endpoint
+const API_EXPORT_URL = `${API_HOST}/api/export-history` // Export history endpoint
+const API_STATUS_URL = `${API_HOST}/api/export-status` // Export status endpoint
 
 
 export function authHeader() {
