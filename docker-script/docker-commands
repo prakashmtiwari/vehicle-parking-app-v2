@@ -1,0 +1,12 @@
+docker run --net='host' vpa-database:latest
+
+docker run --net='host' vpa-feserver:latest
+
+docker run --net='host' vpa-beserver:latest
+
+docker run --net='host' vpa-redis:latest
+
+docker run --net='host' vpa-cele-work:latest
+
+docker run --net='host' vpa-cele-beat:latest
+

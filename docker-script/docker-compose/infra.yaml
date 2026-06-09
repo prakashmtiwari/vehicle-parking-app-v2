@@ -1,0 +1,37 @@
+services:
+  redis:
+    build:
+      context: ../../docker-script
+      dockerfile: Dockerfile.rds
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  postgres:
+    build:
+      context: ../database
+      dockerfile: Dockerfile.pg
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: parking-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    
+
+volumes:
+  redis-data:
+  postgres-data:

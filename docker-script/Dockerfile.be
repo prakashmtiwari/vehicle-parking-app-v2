@@ -1,0 +1,32 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY ./requirements.txt /app/
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    graphviz \
+    graphviz-dev \
+    pkg-config \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip setuptools wheel
+
+RUN pip install --no-cache-dir --default-timeout=100 --retries 10 -r requirements.txt
+
+COPY . /app/
+
+RUN pip install -e .
+
+WORKDIR /app/vpa/beserver
+
+RUN rm -rf migrations/
+
+ENTRYPOINT ["python3"]
+
+CMD ["app.py"]
+

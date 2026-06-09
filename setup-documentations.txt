@@ -1,0 +1,14 @@
+1. Docker commands used
+
+# build image 
+docker build -t image_name -f Dockerfile_name .
+
+# Run container
+docker run --net='host' image_name
+
+
+docker compose config
+
+docker compose up --watch
+
+docker compose up --watch --build --force-recreate

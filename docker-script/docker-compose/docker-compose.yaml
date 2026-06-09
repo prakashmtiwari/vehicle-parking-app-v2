@@ -1,0 +1,59 @@
+include:
+   - path: ./infra.yaml
+services:
+  backend:
+    build:
+      context: ../../
+      dockerfile: docker-script/Dockerfile.be
+    ports:
+      - 5000:5000
+    image: vpa-beserver:latest
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../../vpa
+          target: /app/vpa
+        - action: rebuild
+          path: ../../requirements.txt
+
+  frontend:
+    build:
+      context: ../../vpa
+      dockerfile: ../docker-script/Dockerfile.fe
+    ports:
+      - 5173:5173
+    image: vpa-feserver:latest
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../../vpa/feserver
+          target: /app/
+        - action: rebuild
+          path: ../../vpa/feserver/package.json
+
+  celery_worker:
+    build:
+      context: ../../
+      dockerfile: docker-script/Dockerfile.cel_work
+    image: vpa-celery-worker:latest
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  celery_beat:
+    build:
+      context: ../../
+      dockerfile: docker-script/Dockerfile.cel_beat
+    image: vpa-celery-beat:latest
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy

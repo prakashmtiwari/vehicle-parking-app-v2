@@ -50,7 +50,6 @@ pillow==11.2.1
 prompt_toolkit==3.0.52
 psycopg2-binary==2.9.9
 pycparser==2.23
-pygraphviz=14.1.2
 PyJWT==2.10.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0

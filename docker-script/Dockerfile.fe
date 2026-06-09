@@ -1,0 +1,12 @@
+FROM node:22-slim
+
+WORKDIR /app
+
+COPY ./feserver/package.json ./feserver/package-lock.json ./
+
+RUN npm ci
+
+COPY ./feserver ./
+
+CMD ["npm", "run", "dev"]
+
